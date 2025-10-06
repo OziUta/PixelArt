@@ -19,6 +19,7 @@ class PixelArtApp {
         
         if (this.telegram.isInTelegram) {
             document.body.classList.add('is-telegram');
+            this.fixMobileScrolling();
         }
         
         const loadTime = this.telegram.isInTelegram ? 1500 : 2500;
@@ -28,6 +29,20 @@ class PixelArtApp {
         
         this.initMainMenu();
         this.initSizeSelection();
+    }
+    
+    fixMobileScrolling() {
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
     }
     
     switchScreen(targetScreen) {
@@ -40,6 +55,12 @@ class PixelArtApp {
             setTimeout(() => {
                 currentElement.classList.remove('active', 'screen-transition');
                 targetElement.classList.add('active');
+                
+                if (targetScreen === 'sizeSelection' && this.telegram.isInTelegram) {
+                    setTimeout(() => {
+                        targetElement.scrollTop = 0;
+                    }, 100);
+                }
                 
                 setTimeout(() => {
                     targetElement.classList.add('screen-transition');
@@ -64,6 +85,18 @@ class PixelArtApp {
                 sizeOptions.forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
                 this.selectedSize = parseInt(option.dataset.size);
+                
+                if (this.telegram.isInTelegram) {
+                    setTimeout(() => {
+                        const buttons = document.querySelector('.size-selection-buttons');
+                        if (buttons) {
+                            buttons.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'nearest'
+                            });
+                        }
+                    }, 300);
+                }
             });
         });
         
