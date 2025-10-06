@@ -696,3 +696,125 @@ body {
 .is-telegram .screen {
     height: 100vh;
 }
+
+/* Добавляем в конец файла */
+
+/* Мобильная адаптация для Telegram */
+.is-telegram .size-selection-container {
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px 0;
+}
+
+.is-telegram .size-options {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.is-telegram .size-option {
+    padding: 15px;
+    margin: 0 10px;
+}
+
+.is-telegram .size-preview {
+    width: 60px;
+    height: 60px;
+}
+
+.is-telegram .size-header {
+    margin-bottom: 30px;
+    padding: 0 15px;
+}
+
+.is-telegram .size-header h1 {
+    font-size: 1.8rem;
+}
+
+.is-telegram .size-header p {
+    font-size: 1rem;
+}
+
+.is-telegram .size-selection-buttons {
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);
+    padding: 15px;
+    margin-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Улучшаем скролл для мобильных */
+.is-telegram .size-selection-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.is-telegram .size-selection-container::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+}
+
+.is-telegram .size-selection-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+}
+
+.is-telegram .size-selection-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.5);
+}
+
+/* Адаптация для очень маленьких экранов */
+@media (max-height: 600px) {
+    .is-telegram .size-selection-container {
+        max-height: 85vh;
+        padding: 10px 0;
+    }
+    
+    .is-telegram .size-option {
+        padding: 12px;
+    }
+    
+    .is-telegram .size-preview {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .is-telegram .size-option span {
+        font-size: 1.1rem;
+    }
+    
+    .is-telegram .size-option small {
+        font-size: 0.8rem;
+    }
+}
+
+/* Убираем скролл тела страницы в Telegram */
+.is-telegram body {
+    overflow: hidden;
+}
+
+.is-telegram .screen {
+    overflow: hidden;
+}
+
+/* Делаем контейнер выбора размера скроллируемым */
+.is-telegram #sizeSelection {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Улучшаем отображение на очень маленьких устройствах */
+@media (max-width: 360px) {
+    .is-telegram .size-option {
+        margin: 0 5px;
+    }
+    
+    .is-telegram .size-selection-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .is-telegram .size-selection-buttons button {
+        width: 100%;
+    }
+}
