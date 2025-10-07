@@ -11,6 +11,15 @@ class PixelArtEditor {
     init() {
         this.createGrid();
         this.setupEventListeners();
+        this.setupResizeHandler();
+    }
+    setupResizeHandler() {
+        // Пересоздаем сетку при изменении размера окна
+        window.addEventListener('resize', () => {
+            if (this.gridSize) {
+                this.createGrid();
+            }
+        });
     }
     
     createGrid() {
@@ -262,3 +271,4 @@ class PixelArtEditor {
         return canvas.toDataURL();
     }
 }
+
