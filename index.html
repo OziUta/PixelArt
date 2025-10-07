@@ -71,13 +71,14 @@
     </div>
 
     <!-- Экран выбора размера -->
-    <div id="sizeSelection" class="screen">
-        <div class="size-selection-container">
-            <div class="size-header">
-                <h1>Выберите размер сетки</h1>
-                <p>Вы можете изменить размер позже в настройках</p>
-            </div>
-            
+<div id="sizeSelection" class="screen">
+    <div class="size-selection-container">
+        <div class="size-header">
+            <h1>Выберите размер сетки</h1>
+            <p>Вы можете изменить размер позже в настройках</p>
+        </div>
+        
+        <div class="size-options-wrapper">
             <div class="size-options">
                 <div class="size-option" data-size="8">
                     <div class="size-preview" data-size="8">
@@ -107,13 +108,14 @@
                     <span class="size-label">64×64</span>
                 </div>
             </div>
-            
-            <div class="size-selection-buttons">
-                <button class="back-btn" onclick="app.returnToMenu()">Назад</button>
-                <button class="confirm-btn" onclick="app.confirmSizeSelection()">Продолжить</button>
-            </div>
+        </div>
+        
+        <div class="size-selection-buttons">
+            <button class="back-btn" onclick="app.returnToMenu()">Назад</button>
+            <button class="confirm-btn" onclick="app.confirmSizeSelection()">Продолжить</button>
         </div>
     </div>
+</div>
 
     <!-- Рабочая область -->
     <div id="workspace" class="screen">
@@ -128,3 +130,4 @@
     <script src="js/editor.js"></script>
 </body>
 </html>
+
