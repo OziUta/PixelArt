@@ -302,7 +302,32 @@ function initSizeSelection() {
         getSelectedSize: () => selectedSize
     };
 }
-
+function initSizeSelection() {
+    const sizeOptions = document.querySelectorAll('.size-option');
+    let selectedSize = 16; // размер по умолчанию
+    
+    sizeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Убираем активный класс у всех опций
+            sizeOptions.forEach(opt => opt.classList.remove('active'));
+            // Добавляем активный класс к выбранной опции
+            this.classList.add('active');
+            // Сохраняем выбранный размер
+            selectedSize = parseInt(this.getAttribute('data-size'));
+        });
+    });
+    
+    // Активируем размер по умолчанию (16x16)
+    const defaultOption = document.querySelector('.size-option[data-size="16"]');
+    if (defaultOption) {
+        defaultOption.classList.add('active');
+    }
+    
+    return {
+        getSelectedSize: () => selectedSize
+    };
+}
 // Инициализация при загрузке
 
 const sizeSelector = initSizeSelection();
+
