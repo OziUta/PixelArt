@@ -11,44 +11,62 @@ class PixelArtApp {
         this.selectedSize = 16;
         this.editor = null;
         this.telegram = telegramApp;
+        this.isInitialized = false;
     }
     
-    init() {
-        // Инициализируем Telegram интеграцию
-        this.telegram.init();
+    async init() {
+        console.log('Starting app initialization...');
         
-        if (this.telegram.isInTelegram) {
-            document.body.classList.add('is-telegram');
-            // Устанавливаем обработчик кнопки назад
-            this.telegram.setBackButtonCallback(() => this.handleBackButton());
+        try {
+            // Инициализируем Telegram интеграцию
+            const isTelegram = await this.telegram.init();
+            console.log('Telegram initialized:', isTelegram);
+            
+            if (isTelegram) {
+                document.body.classList.add('is-telegram');
+                // Устанавливаем обработчик кнопки назад
+                this.telegram.setBackButtonCallback(() => this.handleBackButton());
+            }
+            
+            this.isInitialized = true;
+            
+            // Переходим к главному меню
+            this.showMainMenu();
+            
+        } catch (error) {
+            console.error('Error during app initialization:', error);
+            // Если что-то пошло не так, всё равно показываем меню
+            this.showMainMenu();
         }
+    }
+
+    showMainMenu() {
+        console.log('Showing main menu...');
         
-        const loadTime = this.telegram.isInTelegram ? 1500 : 1000;
+        // Даём время на отрисовку анимации загрузки
         setTimeout(() => {
             this.switchScreen('menu');
-        }, loadTime);
-        
-        this.initMainMenu();
-        this.initSizeSelection();
+            this.initMainMenu();
+            this.initSizeSelection();
+        }, 1000);
     }
 
     // Обработчик кнопки "Назад"
     handleBackButton() {
+        console.log('Back button pressed on screen:', this.currentScreen);
+        
         switch (this.currentScreen) {
             case 'menu':
-                // В главном меню - закрываем приложение
                 if (this.telegram.isInTelegram) {
                     this.telegram.tg.close();
                 }
                 break;
                 
             case 'sizeSelection':
-                // В выборе размера - возвращаемся в меню
                 this.returnToMenu();
                 break;
                 
             case 'workspace':
-                // В рабочей области - возвращаемся в меню
                 this.returnToMenu();
                 break;
                 
@@ -60,6 +78,8 @@ class PixelArtApp {
     }
     
     switchScreen(targetScreen) {
+        console.log('Switching screen to:', targetScreen);
+        
         const currentElement = this.screens[this.currentScreen];
         const targetElement = this.screens[targetScreen];
         
@@ -82,6 +102,8 @@ class PixelArtApp {
                 // Обновляем видимость кнопки "Назад" при смене экрана
                 this.updateBackButtonVisibility();
             }, 300);
+        } else {
+            console.error('Screen elements not found:', { current: this.currentScreen, target: targetScreen });
         }
     }
 
@@ -89,31 +111,35 @@ class PixelArtApp {
     updateBackButtonVisibility() {
         if (!this.telegram.isInTelegram) return;
         
+        console.log('Updating back button visibility for screen:', this.currentScreen);
+        
         switch (this.currentScreen) {
             case 'menu':
-                // В главном меню скрываем кнопку (будет крестик)
                 this.telegram.hideBackButton();
                 break;
                 
             case 'sizeSelection':
             case 'workspace':
-                // В других экранах показываем кнопку "Назад"
                 this.telegram.showBackButton();
                 break;
         }
     }
     
     initMainMenu() {
+        console.log('Initializing main menu...');
         this.loadRecentProjects();
     }
     
     initSizeSelection() {
+        console.log('Initializing size selection...');
+        
         const sizeOptions = document.querySelectorAll('.size-option');
         sizeOptions.forEach(option => {
             option.addEventListener('click', () => {
                 sizeOptions.forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
                 this.selectedSize = parseInt(option.dataset.size);
+                console.log('Selected size:', this.selectedSize);
             });
         });
         
@@ -125,9 +151,13 @@ class PixelArtApp {
     
     loadRecentProjects() {
         const thumbnailsContainer = document.getElementById('recentProjects');
-        if (!thumbnailsContainer) return;
+        if (!thumbnailsContainer) {
+            console.error('Recent projects container not found');
+            return;
+        }
         
         const recentProjects = JSON.parse(localStorage.getItem('recentProjects') || '[]');
+        console.log('Loaded recent projects:', recentProjects.length);
         
         thumbnailsContainer.innerHTML = '';
         
@@ -159,6 +189,7 @@ class PixelArtApp {
     }
     
     startNewProject() {
+        console.log('Starting new project...');
         this.switchScreen('sizeSelection');
     }
     
@@ -168,6 +199,7 @@ class PixelArtApp {
             return;
         }
         
+        console.log('Confirming size selection:', this.selectedSize);
         this.switchScreen('workspace');
         
         setTimeout(() => {
@@ -176,10 +208,14 @@ class PixelArtApp {
     }
     
     initWorkspace() {
-        const workspace = document.getElementById('pixelArtApp');
-        if (!workspace) return;
+        console.log('Initializing workspace...');
         
-        // УБИРАЕМ кнопку "Назад" из HTML, так как теперь используем системную
+        const workspace = document.getElementById('pixelArtApp');
+        if (!workspace) {
+            console.error('Workspace container not found');
+            return;
+        }
+        
         workspace.innerHTML = `
             <header class="toolbar">
                 <div class="toolbar-center">
@@ -237,12 +273,15 @@ class PixelArtApp {
             }
             
             this.editor = new PixelArtEditor(this.selectedSize);
+            console.log('Workspace initialized successfully');
         }, 100);
         
         this.updateBackButtonVisibility();
     }
     
     changeGridSize(newSize) {
+        console.log('Changing grid size to:', newSize);
+        
         if (this.editor) {
             this.editor.changeGridSize(parseInt(newSize));
             const statusBar = document.querySelector('.status-bar span');
@@ -253,6 +292,8 @@ class PixelArtApp {
     }
     
     returnToMenu() {
+        console.log('Returning to menu...');
+        
         if (this.editor) {
             this.saveCurrentProject();
         }
@@ -281,6 +322,7 @@ class PixelArtApp {
         }
         
         localStorage.setItem('recentProjects', JSON.stringify(recentProjects));
+        console.log('Project saved');
     }
     
     loadProject() {
@@ -290,6 +332,7 @@ class PixelArtApp {
             return;
         }
         
+        console.log('Loading project...');
         this.loadSavedProject(recentProjects[0]);
     }
     
@@ -301,6 +344,7 @@ class PixelArtApp {
             if (this.editor && project.data) {
                 setTimeout(() => {
                     this.editor.loadProject(project.data);
+                    console.log('Project loaded successfully');
                 }, 200);
             }
         }, 500);
@@ -308,6 +352,7 @@ class PixelArtApp {
     
     exportArtwork() {
         if (this.editor) {
+            console.log('Exporting artwork...');
             this.editor.exportAsPNG();
         }
     }
@@ -331,6 +376,17 @@ class PixelArtApp {
 // Инициализация приложения
 let app;
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing app...');
     app = new PixelArtApp();
-    app.init();
+    app.init().catch(error => {
+        console.error('Failed to initialize app:', error);
+        // Fallback: показываем меню даже если инициализация не удалась
+        setTimeout(() => {
+            if (app.screens.menu) {
+                app.screens.loading.classList.remove('active');
+                app.screens.menu.classList.add('active');
+                app.currentScreen = 'menu';
+            }
+        }, 2000);
+    });
 });
