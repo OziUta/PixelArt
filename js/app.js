@@ -26,8 +26,49 @@ class PixelArtApp {
             this.switchScreen('menu');
         }, loadTime);
         
-        this.initMainMenu();
-        this.initSizeSelection();
+        this.setupGlobalEventListeners();
+    }
+    
+    setupGlobalEventListeners() {
+        // Обработчики для главного меню
+        document.addEventListener('click', (e) => {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+            
+            const action = target.getAttribute('data-action');
+            
+            switch (action) {
+                case 'new-project':
+                    this.startNewProject();
+                    break;
+                case 'load-project':
+                    this.loadProject();
+                    break;
+                case 'gallery':
+                    this.openGallery();
+                    break;
+                case 'tutorial':
+                    this.showTutorial();
+                    break;
+                case 'back-to-menu':
+                    this.returnToMenu();
+                    break;
+                case 'confirm-size':
+                    this.confirmSizeSelection();
+                    break;
+            }
+        });
+        
+        // Обработчики для выбора размера
+        document.addEventListener('click', (e) => {
+            const sizeOption = e.target.closest('.size-option');
+            if (sizeOption) {
+                const sizeOptions = document.querySelectorAll('.size-option');
+                sizeOptions.forEach(opt => opt.classList.remove('active'));
+                sizeOption.classList.add('active');
+                this.selectedSize = parseInt(sizeOption.dataset.size);
+            }
+        });
     }
     
     switchScreen(targetScreen) {
@@ -35,49 +76,29 @@ class PixelArtApp {
         const targetElement = this.screens[targetScreen];
         
         if (currentElement && targetElement) {
-            currentElement.classList.add('screen-transition');
+            // Сначала скрываем текущий экран
+            currentElement.classList.remove('active');
             
-            setTimeout(() => {
-                currentElement.classList.remove('active', 'screen-transition');
-                targetElement.classList.add('active');
-                
-                // Прокручиваем вверх при переходе на экран выбора размера
-                if (targetScreen === 'sizeSelection') {
-                    setTimeout(() => {
-                        targetElement.scrollTop = 0;
-                    }, 100);
-                }
-                
+            // Показываем целевой экран
+            targetElement.classList.add('active');
+            
+            // Прокручиваем вверх при переходе на экран выбора размера
+            if (targetScreen === 'sizeSelection') {
                 setTimeout(() => {
-                    targetElement.classList.add('screen-transition');
-                    setTimeout(() => {
-                        targetElement.classList.remove('screen-transition');
-                    }, 600);
-                }, 50);
-                
-                this.currentScreen = targetScreen;
-            }, 300);
-        }
-    }
-    
-    initMainMenu() {
-        this.loadRecentProjects();
-    }
-    
-    initSizeSelection() {
-        const sizeOptions = document.querySelectorAll('.size-option');
-        sizeOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                sizeOptions.forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-                this.selectedSize = parseInt(option.dataset.size);
-            });
-        });
-        
-        // Активируем размер по умолчанию
-        const defaultOption = document.querySelector('.size-option[data-size="16"]');
-        if (defaultOption) {
-            defaultOption.classList.add('active');
+                    targetElement.scrollTop = 0;
+                }, 100);
+            }
+            
+            // Инициализируем экран если нужно
+            if (targetScreen === 'menu') {
+                this.loadRecentProjects();
+            } else if (targetScreen === 'workspace') {
+                setTimeout(() => {
+                    this.initWorkspace();
+                }, 100);
+            }
+            
+            this.currentScreen = targetScreen;
         }
     }
     
@@ -99,6 +120,8 @@ class PixelArtApp {
         recentProjects.slice(0, 4).forEach((project, index) => {
             const thumb = document.createElement('div');
             thumb.className = 'project-thumb';
+            thumb.setAttribute('data-action', 'load-saved-project');
+            thumb.dataset.projectIndex = index;
             
             if (project.thumbnail) {
                 thumb.style.background = `url(${project.thumbnail}) center/cover`;
@@ -108,13 +131,24 @@ class PixelArtApp {
             }
             
             thumb.title = project.name || `Проект ${index + 1}`;
-            thumb.onclick = () => this.loadSavedProject(project);
             
             thumbnailsContainer.appendChild(thumb);
+        });
+        
+        // Обработчик для загрузки сохраненных проектов
+        document.querySelectorAll('[data-action="load-saved-project"]').forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                const recentProjects = JSON.parse(localStorage.getItem('recentProjects') || '[]');
+                const projectIndex = parseInt(thumb.dataset.projectIndex);
+                if (recentProjects[projectIndex]) {
+                    this.loadSavedProject(recentProjects[projectIndex]);
+                }
+            });
         });
     }
     
     startNewProject() {
+        console.log('Starting new project...');
         this.switchScreen('sizeSelection');
     }
     
@@ -125,21 +159,17 @@ class PixelArtApp {
         }
         
         this.switchScreen('workspace');
-        
-        setTimeout(() => {
-            this.initWorkspace();
-        }, 500);
     }
     
     initWorkspace() {
         const workspace = document.getElementById('pixelArtApp');
         const shareButton = this.telegram.isInTelegram ? 
-            `<button class="share-btn" onclick="app.shareProject()" title="Поделиться в Telegram">📤 Поделиться</button>` : '';
+            `<button class="share-btn" data-action="share-project" title="Поделиться в Telegram">📤 Поделиться</button>` : '';
         
         workspace.innerHTML = `
             <header class="toolbar">
                 <div class="toolbar-left">
-                    <button class="back-btn" onclick="app.returnToMenu()">← Назад</button>
+                    <button class="back-btn" data-action="back-to-menu">← Назад</button>
                 </div>
                 <div class="toolbar-center">
                     <div class="tools">
@@ -161,7 +191,7 @@ class PixelArtApp {
                 <div class="toolbar-right">
                     <div class="size-selector">
                         <span>Размер:</span>
-                        <select id="gridSizeSelect" onchange="app.changeGridSize(this.value)">
+                        <select id="gridSizeSelect">
                             <option value="8">8x8</option>
                             <option value="16" selected>16x16</option>
                             <option value="32">32x32</option>
@@ -180,7 +210,7 @@ class PixelArtApp {
             
             <footer class="status-bar">
                 <span>Размер: ${this.selectedSize}x${this.selectedSize}</span>
-                <button class="export-btn" onclick="app.exportArtwork()">Экспорт PNG</button>
+                <button class="export-btn" data-action="export-artwork">Экспорт PNG</button>
             </footer>
         `;
         
@@ -188,6 +218,7 @@ class PixelArtApp {
         const sizeSelect = document.getElementById('gridSizeSelect');
         if (sizeSelect) {
             sizeSelect.value = this.selectedSize;
+            sizeSelect.addEventListener('change', (e) => this.changeGridSize(e.target.value));
         }
         
         // Инициализация редактора
@@ -197,6 +228,16 @@ class PixelArtApp {
         if (this.telegram.isInTelegram) {
             this.telegram.tg.MainButton.setText('Сохранить в Telegram');
             this.telegram.tg.MainButton.show();
+            this.telegram.tg.MainButton.onClick(() => {
+                this.saveToTelegram();
+            });
+        }
+    }
+    
+    saveToTelegram() {
+        if (this.editor) {
+            const projectData = this.editor.getProjectData();
+            this.telegram.sendDataToBot(projectData);
         }
     }
     
@@ -227,10 +268,10 @@ class PixelArtApp {
         // Скрываем основную кнопку Telegram
         if (this.telegram.isInTelegram) {
             this.telegram.tg.MainButton.hide();
+            this.telegram.tg.MainButton.offClick(this.saveToTelegram);
         }
         
         this.switchScreen('menu');
-        this.loadRecentProjects();
     }
     
     saveCurrentProject() {
@@ -279,7 +320,7 @@ class PixelArtApp {
                     this.editor.loadProject(project.data);
                 }, 100);
             }
-        }, 500);
+        }, 100);
     }
     
     exportArtwork() {
