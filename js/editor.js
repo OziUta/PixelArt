@@ -247,3 +247,66 @@ class PixelArtEditor {
         return canvas.toDataURL();
     }
 }
+// В editor.js добавим функцию для адаптивного размера сетки
+function createAdaptiveGrid(size) {
+    const grid = document.getElementById('pixelGrid');
+    const container = document.querySelector('.canvas-container');
+    
+    // Очищаем сетку
+    grid.innerHTML = '';
+    
+    // Рассчитываем оптимальный размер пикселя
+    const containerWidth = container.clientWidth - 30; // минус padding
+    const containerHeight = container.clientHeight - 30;
+    
+    const pixelSize = Math.min(
+        Math.floor(containerWidth / size),
+        Math.floor(containerHeight / size)
+    );
+    
+    // Устанавливаем размеры сетки
+    grid.style.gridTemplateColumns = `repeat(${size}, ${pixelSize}px)`;
+    grid.style.gridTemplateRows = `repeat(${size}, ${pixelSize}px)`;
+    
+    // Создаем пиксели
+    for (let i = 0; i < size * size; i++) {
+        const pixel = document.createElement('div');
+        pixel.className = 'pixel';
+        pixel.dataset.index = i;
+        grid.appendChild(pixel);
+    }
+    
+    // Обновляем отображаемый размер
+    document.getElementById('currentSize').textContent = `${size}×${size}`;
+    
+    return pixelSize;
+}
+
+// Функция для обновления размера при изменении окна
+function setupGridResize() {
+    let currentSize = 16;
+    
+    function handleResize() {
+        createAdaptiveGrid(currentSize);
+    }
+    
+    // Обновляем сетку при изменении размера окна
+    window.addEventListener('resize', handleResize);
+    
+    return {
+        setSize: (size) => {
+            currentSize = size;
+            createAdaptiveGrid(size);
+        }
+    };
+}
+
+// Инициализация
+const gridManager = setupGridResize();
+
+// В app.js обновим функцию подтверждения выбора размера
+function confirmSizeSelection() {
+    const selectedSize = sizeSelector.getSelectedSize();
+    gridManager.setSize(selectedSize);
+    switchScreen('workspace');
+}
