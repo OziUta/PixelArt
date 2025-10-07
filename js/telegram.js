@@ -28,7 +28,7 @@ class TelegramIntegration {
         this.setupTheme();
         this.setupMainButton();
         this.setupEventListeners();
-        this.fixViewport(); // Добавляем фикс viewport
+        this.fixViewport();
         
         console.log('Telegram Web App ready. User:', this.user);
     }
@@ -37,15 +37,11 @@ class TelegramIntegration {
         console.log('Running in standalone mode');
     }
 
-    // Добавляем метод для фиксации viewport
     fixViewport() {
-        // Устанавливаем правильную высоту viewport
         this.adjustLayout();
         
-        // Добавляем обработчик изменения размера
         this.tg.onEvent('viewportChanged', this.adjustLayout.bind(this));
         
-        // Форсируем обновление через небольшой таймаут
         setTimeout(() => {
             this.adjustLayout();
         }, 100);
@@ -104,7 +100,6 @@ class TelegramIntegration {
         if (viewport) {
             document.documentElement.style.setProperty('--tg-viewport-height', `${viewport}px`);
             
-            // Принудительно применяем высоту ко всем экранам
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.style.height = `${viewport}px`;
             });
