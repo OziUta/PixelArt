@@ -785,3 +785,12 @@ body {
 .is-telegram .screen {
     height: 100vh;
 }
+
+/* Убираем кнопку Сохранить в Telegram из рабочей области */
+.share-btn {
+    display: none !important;
+}
+
+.is-telegram .share-btn {
+    display: none !important;
+}
