@@ -519,26 +519,14 @@ body {
     gap: 15px;
 }
 
-.toolbar-left, .toolbar-center, .toolbar-right {
+.toolbar-left {
+    display: none;
+}
+
+.toolbar-center, .toolbar-right {
     display: flex;
     align-items: center;
     gap: 15px;
-}
-
-.back-btn {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Courier New', monospace;
-    transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-    background: #c0392b;
-    transform: translateX(-3px);
 }
 
 .tools {
@@ -620,10 +608,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 20px;
     overflow: auto;
-    width: 100%;
-    height: 100%;
 }
 
 .canvas-container {
@@ -634,10 +620,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
-    max-width: none;
-    max-height: none;
-    overflow: auto;
 }
 
 .pixel-grid {
@@ -646,82 +628,21 @@ body {
     background: #555;
     border: 2px solid #666;
     border-radius: 5px;
-    overflow: visible;
-    margin: 0 auto;
-    /* Убираем все ограничения по ширине */
-    width: auto;
-    max-width: none;
+    overflow: hidden;
 }
 
 .pixel {
     background: color-mix(in srgb, var(--bg-primary) 90%, #000 10%);
     cursor: pointer;
     transition: all 0.1s ease;
-    /* Убираем минимальные размеры */
-    width: 100%;
-    height: 100%;
-    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
 }
 
 .pixel:hover {
     background: color-mix(in srgb, var(--bg-primary) 80%, #000 20%) !important;
 }
 
-.pixel.filled {
-    border: none;
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-    .workspace {
-        padding: 5px;
-    }
-    
-    .canvas-container {
-        padding: 10px;
-    }
-    
-    .toolbar {
-        padding: 8px;
-        gap: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .workspace {
-        padding: 2px;
-    }
-    
-    .canvas-container {
-        padding: 5px;
-    }
-    
-    .pixel-grid {
-        gap: 0.5px;
-    }
-}
-
-/* Для ландшафтной ориентации */
-@media (max-height: 500px) and (orientation: landscape) {
-    .workspace {
-        padding: 2px;
-    }
-    
-    .canvas-container {
-        padding: 5px;
-    }
-}
-
-/* Убедимся, что тулбар не занимает слишком много места */
-.toolbar {
-    flex-shrink: 0;
-    min-height: auto;
-}
-
-.status-bar {
-    flex-shrink: 0;
-    min-height: auto;
-}
 /* Нижняя панель */
 .status-bar {
     background: color-mix(in srgb, var(--bg-primary) 90%, #000 10%);
@@ -856,5 +777,6 @@ body {
 .is-telegram .share-btn {
     display: none !important;
 }
+
 
 
