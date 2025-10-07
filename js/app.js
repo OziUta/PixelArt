@@ -128,9 +128,6 @@ class PixelArtApp {
         
         workspace.innerHTML = `
             <header class="toolbar">
-                <div class="toolbar-left">
-                    <button class="back-btn" onclick="app.returnToMenu()">← Назад</button>
-                </div>
                 <div class="toolbar-center">
                     <div class="tools">
                         <button class="tool active" data-tool="brush" title="Кисть">🖌️</button>
@@ -308,3 +305,4 @@ function initSizeSelection() {
 
 // Инициализация при загрузке
 const sizeSelector = initSizeSelection();
+
