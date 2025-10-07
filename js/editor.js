@@ -35,10 +35,25 @@ class PixelArtEditor {
     }
     
     calculatePixelSize() {
-        const maxSize = window.telegramApp?.isInTelegram ? 600 : 800;
-        return Math.max(4, Math.min(20, Math.floor(maxSize / this.gridSize)));
+        // Получаем размеры контейнера
+        const container = document.querySelector('.canvas-container');
+        if (!container) return 20; // fallback размер
+        
+        const containerWidth = container.clientWidth - 40; // учитываем padding
+        const containerHeight = container.clientHeight - 40;
+        
+        // Вычисляем максимальный размер пикселя, который вместит всю сетку
+        const maxPixelWidth = Math.floor(containerWidth / this.gridSize);
+        const maxPixelHeight = Math.floor(containerHeight / this.gridSize);
+        
+        // Берем минимальный размер, чтобы сетка влезла полностью
+        const pixelSize = Math.min(maxPixelWidth, maxPixelHeight);
+        
+        // Ограничиваем минимальный и максимальный размер
+        return Math.max(4, Math.min(30, pixelSize));
     }
     
+    // Остальные методы остаются без изменений...
     setupEventListeners() {
         const container = document.getElementById('canvas');
         container.addEventListener('mousedown', (e) => this.startDrawing(e));
@@ -178,16 +193,15 @@ class PixelArtEditor {
         });
         
         const link = document.createElement('a');
-    link.download = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
-    
-    if (window.telegramApp) {
-        window.telegramApp.showAlert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
-    } else {
-        alert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
-    }
+        link.download = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
         
+        if (window.telegramApp) {
+            window.telegramApp.showAlert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
+        } else {
+            alert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
+        }
     }
     
     getProjectData() {
@@ -248,4 +262,3 @@ class PixelArtEditor {
         return canvas.toDataURL();
     }
 }
-
