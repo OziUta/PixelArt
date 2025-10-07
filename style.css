@@ -45,14 +45,12 @@ body {
     height: 100%;
     display: none;
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    z-index: 1;
+    transition: opacity 0.5s ease-in-out;
 }
 
 .screen.active {
     display: flex;
     opacity: 1;
-    z-index: 2;
 }
 
 /* Анимации */
@@ -88,7 +86,6 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    z-index: 100;
 }
 
 .loading-container {
@@ -143,7 +140,6 @@ body {
     background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
     justify-content: center;
     align-items: center;
-    z-index: 10;
 }
 
 .menu-container {
@@ -193,8 +189,6 @@ body {
     gap: 10px;
     animation: fadeIn 0.6s ease-out;
     animation-fill-mode: both;
-    position: relative;
-    z-index: 1000;
 }
 
 .menu-btn:nth-child(1) { animation-delay: 0.5s; }
@@ -244,8 +238,6 @@ body {
     font-size: 0.8rem;
     text-align: center;
     padding: 5px;
-    position: relative;
-    z-index: 1000;
 }
 
 .project-thumb:hover {
@@ -256,14 +248,8 @@ body {
 /* Экран выбора размера */
 #sizeSelection {
     background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 20px 0;
-    z-index: 20;
 }
 
 .size-selection-container {
@@ -271,8 +257,6 @@ body {
     width: 90%;
     text-align: center;
     animation: slideInFromBottom 0.8s ease-out;
-    margin: auto;
-    min-height: min-content;
 }
 
 .size-header {
@@ -296,26 +280,18 @@ body {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     margin-bottom: 40px;
-    flex: 1;
 }
 
 .size-option {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 15px;
-    padding: 25px 20px;
+    padding: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     animation: fadeIn 0.6s ease-out;
     animation-fill-mode: both;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 180px;
-    position: relative;
-    z-index: 1000;
 }
 
 .size-option:nth-child(1) { animation-delay: 0.4s; }
@@ -368,19 +344,12 @@ body {
 .size-option small {
     opacity: 0.8;
     font-size: 0.9rem;
-    text-align: center;
 }
 
 .size-selection-buttons {
     display: flex;
     gap: 15px;
     justify-content: center;
-    padding: 20px 0;
-    background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);
-    position: sticky;
-    bottom: 0;
-    border-top: 1px solid rgba(255,255,255,0.2);
-    width: 100%;
 }
 
 .size-selection-buttons button {
@@ -391,9 +360,6 @@ body {
     font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 120px;
-    position: relative;
-    z-index: 1000;
 }
 
 .back-btn {
@@ -422,7 +388,6 @@ body {
 #workspace {
     background: var(--bg-primary);
     flex-direction: column;
-    z-index: 30;
 }
 
 .pixel-art-app {
@@ -435,50 +400,56 @@ body {
 /* Панель инструментов */
 .toolbar {
     background: color-mix(in srgb, var(--bg-primary) 90%, #000 10%);
-    padding: 12px 15px;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid color-mix(in srgb, var(--bg-primary) 80%, #000 20%);
     flex-wrap: wrap;
-    gap: 10px;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1000;
+    gap: 15px;
 }
 
 .toolbar-left, .toolbar-center, .toolbar-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
-.toolbar button {
-    position: relative;
-    z-index: 1001;
+.back-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #c0392b;
+    transform: translateX(-3px);
 }
 
 .tools {
     display: flex;
-    gap: 8px;
+    gap: 10px;
 }
 
 .tool {
     background: #555;
     border: none;
     color: white;
-    padding: 8px;
+    padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     transition: all 0.3s ease;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    z-index: 1001;
 }
 
 .tool.active {
@@ -492,21 +463,17 @@ body {
 
 .color-palette {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
-    max-width: 200px;
 }
 
 .color {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid transparent;
+    border: 3px solid transparent;
     transition: all 0.3s ease;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1001;
 }
 
 .color.active {
@@ -521,42 +488,32 @@ body {
 .size-selector {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background: rgba(255,255,255,0.1);
-    padding: 6px 12px;
+    padding: 8px 15px;
     border-radius: 20px;
-    font-size: 0.9rem;
-    position: relative;
-    z-index: 1001;
 }
 
 .size-selector select {
     background: #555;
     color: white;
     border: none;
-    padding: 4px 8px;
+    padding: 5px 10px;
     border-radius: 5px;
     font-family: 'Courier New', monospace;
     cursor: pointer;
-    font-size: 0.9rem;
-    position: relative;
-    z-index: 1002;
 }
 
 .share-btn {
     background: var(--accent-color);
     color: var(--tg-theme-button-text-color);
     border: none;
-    padding: 8px 12px;
+    padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
     transition: all 0.3s ease;
     display: none;
-    white-space: nowrap;
-    position: relative;
-    z-index: 1001;
 }
 
 .is-telegram .share-btn {
@@ -574,22 +531,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 20px;
     overflow: auto;
-    min-height: 0;
 }
 
 .canvas-container {
     background: color-mix(in srgb, var(--bg-primary) 95%, #000 5%);
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    max-width: calc(100vw - 20px);
-    max-height: calc(100vh - 150px);
+    max-width: 90%;
+    max-height: 90%;
     overflow: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .pixel-grid {
@@ -599,40 +552,15 @@ body {
     border: 2px solid #666;
     border-radius: 5px;
     overflow: hidden;
-    margin: auto;
-}
-
-/* Адаптивные размеры пикселей для разных сеток */
-.pixel-grid[data-size="8"] { 
-    grid-template-columns: repeat(8, 1fr);
-    --pixel-size: min(40px, 8vw);
-}
-
-.pixel-grid[data-size="16"] { 
-    grid-template-columns: repeat(16, 1fr);
-    --pixel-size: min(25px, 5vw);
-}
-
-.pixel-grid[data-size="32"] { 
-    grid-template-columns: repeat(32, 1fr);
-    --pixel-size: min(15px, 3vw);
-}
-
-.pixel-grid[data-size="64"] { 
-    grid-template-columns: repeat(64, 1fr);
-    --pixel-size: min(8px, 1.5vw);
+    margin: 0 auto;
 }
 
 .pixel {
     background: color-mix(in srgb, var(--bg-primary) 90%, #000 10%);
     cursor: pointer;
     transition: all 0.1s ease;
-    width: var(--pixel-size);
-    height: var(--pixel-size);
-    min-width: 3px;
-    min-height: 3px;
-    position: relative;
-    z-index: 1;
+    min-width: 4px;
+    min-height: 4px;
 }
 
 .pixel:hover {
@@ -646,15 +574,11 @@ body {
 /* Нижняя панель */
 .status-bar {
     background: color-mix(in srgb, var(--bg-primary) 90%, #000 10%);
-    padding: 10px 15px;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-top: 2px solid color-mix(in srgb, var(--bg-primary) 80%, #000 20%);
-    flex-shrink: 0;
-    font-size: 0.9rem;
-    position: relative;
-    z-index: 1000;
 }
 
 .export-btn {
@@ -666,9 +590,6 @@ body {
     cursor: pointer;
     font-family: 'Courier New', monospace;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
-    position: relative;
-    z-index: 1001;
 }
 
 .export-btn:hover {
@@ -676,98 +597,43 @@ body {
     transform: translateY(-2px);
 }
 
-/* Мобильная адаптация для Telegram */
-.is-telegram .size-selection-container {
-    padding: 20px 0;
+/* Анимация перехода между экранами */
+.screen-transition {
+    animation: screenSwitch 0.6s ease-in-out;
 }
 
-.is-telegram .size-options {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    margin-bottom: 30px;
+@keyframes screenSwitch {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
-.is-telegram .size-option {
-    padding: 20px 15px;
-    margin: 0 5px;
-    min-height: 140px;
+/* Специфичные стили для Telegram */
+.telegram-only {
+    display: none;
 }
 
-.is-telegram .size-preview {
-    width: 60px;
-    height: 60px;
+.is-telegram .telegram-only {
+    display: block;
 }
 
-.is-telegram .size-header {
-    margin-bottom: 30px;
-    padding: 0 10px;
-}
-
-.is-telegram .size-header h1 {
-    font-size: 1.8rem;
-}
-
-.is-telegram .size-header p {
-    font-size: 1rem;
-}
-
-.is-telegram .size-selection-buttons {
-    padding: 15px 10px;
-}
-
-/* Улучшаем скролл для мобильных */
-#sizeSelection::-webkit-scrollbar {
-    width: 4px;
-}
-
-#sizeSelection::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.1);
-    border-radius: 2px;
-}
-
-#sizeSelection::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.3);
-    border-radius: 2px;
-}
-
-#sizeSelection::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,0.5);
-}
-
-.canvas-container::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.canvas-container::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.1);
-    border-radius: 4px;
-}
-
-.canvas-container::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.3);
-    border-radius: 4px;
-}
-
-.canvas-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,0.5);
+.is-telegram .non-telegram {
+    display: none;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
     .toolbar {
         flex-direction: column;
-        gap: 8px;
-        padding: 10px;
+        gap: 10px;
     }
     
     .tools, .color-palette {
         justify-content: center;
     }
     
-    .color-palette {
-        max-width: 100%;
-        justify-content: center;
+    .size-options {
+        grid-template-columns: 1fr;
     }
     
     .menu-title {
@@ -777,18 +643,6 @@ body {
     .size-header h1 {
         font-size: 2rem;
     }
-    
-    .canvas-container {
-        padding: 10px;
-        max-width: calc(100vw - 10px);
-        max-height: calc(100vh - 140px);
-    }
-    
-    /* Уменьшаем размеры пикселей для мобильных */
-    .pixel-grid[data-size="8"] { --pixel-size: min(35px, 10vw); }
-    .pixel-grid[data-size="16"] { --pixel-size: min(20px, 6vw); }
-    .pixel-grid[data-size="32"] { --pixel-size: min(12px, 4vw); }
-    .pixel-grid[data-size="64"] { --pixel-size: min(6px, 2vw); }
 }
 
 @media (max-width: 480px) {
@@ -804,8 +658,8 @@ body {
     }
     
     .size-preview {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
     }
     
     .menu-buttons {
@@ -816,25 +670,6 @@ body {
         padding: 12px 20px;
         font-size: 1rem;
     }
-    
-    .size-selection-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .size-selection-buttons button {
-        width: 100%;
-    }
-    
-    .toolbar-left, .toolbar-center, .toolbar-right {
-        gap: 5px;
-    }
-    
-    /* Еще меньшие размеры для очень маленьких экранов */
-    .pixel-grid[data-size="8"] { --pixel-size: min(30px, 12vw); }
-    .pixel-grid[data-size="16"] { --pixel-size: min(18px, 7vw); }
-    .pixel-grid[data-size="32"] { --pixel-size: min(10px, 4vw); }
-    .pixel-grid[data-size="64"] { --pixel-size: min(5px, 2vw); }
 }
 
 /* Адаптация для viewport Telegram */
@@ -851,15 +686,6 @@ body {
         padding: 10px 15px;
         font-size: 0.9rem;
     }
-    
-    .is-telegram .size-option {
-        min-height: 120px;
-        padding: 15px 10px;
-    }
-    
-    .is-telegram .size-selection-container {
-        padding: 15px 0;
-    }
 }
 
 .is-telegram body {
@@ -869,31 +695,4 @@ body {
 
 .is-telegram .screen {
     height: 100vh;
-}
-
-/* Убираем выделение при тапе на мобильных */
-.pixel, .tool, .color, .menu-btn, button {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-/* Улучшаем внешний вид для очень маленьких экранов */
-@media (max-width: 360px) {
-    .size-option span {
-        font-size: 1.1rem;
-    }
-    
-    .size-option small {
-        font-size: 0.8rem;
-    }
-    
-    .size-selection-buttons button {
-        padding: 10px 15px;
-        font-size: 1rem;
-    }
 }
