@@ -306,6 +306,16 @@ function initSizeSelection() {
         getSelectedSize: () => selectedSize
     };
 }
-
+function switchScreen(screenName) {
+    // ... существующий код ...
+    
+    if (screenName === 'workspace') {
+        // Даем время на отрисовку DOM перед созданием сетки
+        setTimeout(() => {
+            refreshGridSize();
+        }, 50);
+    }
+}
 // Инициализация при загрузке
 const sizeSelector = initSizeSelection();
+
