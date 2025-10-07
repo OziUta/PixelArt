@@ -124,122 +124,67 @@ class PixelArtApp {
     }
     
     initWorkspace() {
-    const workspace = document.getElementById('pixelArtApp');
-    
-    workspace.innerHTML = `
-        <header class="toolbar" id="mainToolbar">
-            <div class="toolbar-row first-row">
-                <button class="back-btn" onclick="app.returnToMenu()">← Назад</button>
-                <div class="color-palette">
-                    <div class="color active" style="background: #ff0000" data-color="#ff0000" title="Красный"></div>
-                    <div class="color" style="background: #00ff00" data-color="#00ff00" title="Зеленый"></div>
-                    <div class="color" style="background: #0000ff" data-color="#0000ff" title="Синий"></div>
-                    <div class="color" style="background: #ffff00" data-color="#ffff00" title="Желтый"></div>
-                    <div class="color" style="background: #ff00ff" data-color="#ff00ff" title="Пурпурный"></div>
-                    <div class="color" style="background: #00ffff" data-color="#00ffff" title="Голубой"></div>
-                    <div class="color" style="background: #ffffff" data-color="#ffffff" title="Белый"></div>
-                    <div class="color" style="background: #000000" data-color="#000000" title="Черный"></div>
-                </div>
-            </div>
-            <div class="toolbar-row second-row">
-                <div class="tools">
-                    <button class="tool active" data-tool="brush" title="Кисть">🖌️</button>
-                    <button class="tool" data-tool="eraser" title="Ластик">🧹</button>
-                    <button class="tool" data-tool="fill" title="Заливка">🎨</button>
-                </div>
-                <div class="size-selector">
-                    <span>Размер:</span>
-                    <select id="gridSizeSelect" onchange="app.changeGridSize(this.value)">
-                        <option value="8">8x8</option>
-                        <option value="16" selected>16x16</option>
-                        <option value="32">32x32</option>
-                    </select>
-                </div>
-            </div>
-        </header>
+        const workspace = document.getElementById('pixelArtApp');
         
-        <main class="workspace">
-            <div class="canvas-container">
-                <div class="pixel-grid" id="canvas"></div>
-            </div>
-        </main>
-        
-        <footer class="status-bar">
-            <span>Размер: ${this.selectedSize}x${this.selectedSize}</span>
-            <button class="export-btn" onclick="app.exportArtwork()">Экспорт PNG</button>
-        </footer>
-    `;
-    
-    const sizeSelect = document.getElementById('gridSizeSelect');
-    if (sizeSelect) {
-        sizeSelect.value = this.selectedSize;
-    }
-    
-    this.editor = new PixelArtEditor(this.selectedSize);
-}
-   // Добавьте этот метод в класс PixelArtApp
-forceMobileLayout() {
-    const toolbar = document.getElementById('mainToolbar');
-    if (toolbar) {
-        toolbar.style.cssText = `
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 15px !important;
+        workspace.innerHTML = `
+            <header class="toolbar">
+                <div class="toolbar-left">
+                    <button class="back-btn" onclick="app.returnToMenu()">← Назад</button>
+                </div>
+                <div class="toolbar-center">
+                    <div class="tools">
+                        <button class="tool active" data-tool="brush" title="Кисть">🖌️</button>
+                        <button class="tool" data-tool="eraser" title="Ластик">🧹</button>
+                        <button class="tool" data-tool="fill" title="Заливка">🎨</button>
+                    </div>
+                    <div class="color-palette">
+                        <div class="color active" style="background: #ff0000" data-color="#ff0000" title="Красный"></div>
+                        <div class="color" style="background: #00ff00" data-color="#00ff00" title="Зеленый"></div>
+                        <div class="color" style="background: #0000ff" data-color="#0000ff" title="Синий"></div>
+                        <div class="color" style="background: #ffff00" data-color="#ffff00" title="Желтый"></div>
+                        <div class="color" style="background: #ff00ff" data-color="#ff00ff" title="Пурпурный"></div>
+                        <div class="color" style="background: #00ffff" data-color="#00ffff" title="Голубой"></div>
+                        <div class="color" style="background: #ffffff" data-color="#ffffff" title="Белый"></div>
+                        <div class="color" style="background: #000000" data-color="#000000" title="Черный"></div>
+                    </div>
+                </div>
+                <div class="toolbar-right">
+                    <div class="size-selector">
+                        <span>Размер:</span>
+                        <select id="gridSizeSelect" onchange="app.changeGridSize(this.value)">
+                            <option value="8">8x8</option>
+                            <option value="16" selected>16x16</option>
+                            <option value="32">32x32</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+            
+            <main class="workspace">
+                <div class="canvas-container">
+                    <div class="pixel-grid" id="canvas"></div>
+                </div>
+            </main>
+            
+            <footer class="status-bar">
+                <span>Размер: ${this.selectedSize}x${this.selectedSize}</span>
+                <button class="export-btn" onclick="app.exportArtwork()">Экспорт PNG</button>
+            </footer>
         `;
         
-        const rows = toolbar.querySelectorAll('.toolbar-row');
-        rows.forEach(row => {
-            row.style.cssText = `
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 12px !important;
-                width: 100% !important;
-                align-items: center !important;
-            `;
-        });
-        
-        const backBtn = toolbar.querySelector('.back-btn');
-        if (backBtn) {
-            backBtn.style.cssText = `
-                width: 100% !important;
-                max-width: 100% !important;
-                order: 1 !important;
-            `;
+        const sizeSelect = document.getElementById('gridSizeSelect');
+        if (sizeSelect) {
+            sizeSelect.value = this.selectedSize;
         }
         
-        const colorPalette = toolbar.querySelector('.color-palette');
-        if (colorPalette) {
-            colorPalette.style.cssText = `
-                display: flex !important;
-                justify-content: center !important;
-                width: 100% !important;
-                order: 2 !important;
-                gap: 8px !important;
-            `;
-        }
+        this.editor = new PixelArtEditor(this.selectedSize);
         
-        const tools = toolbar.querySelector('.tools');
-        if (tools) {
-            tools.style.cssText = `
-                display: flex !important;
-                justify-content: center !important;
-                width: 100% !important;
-                order: 1 !important;
-                gap: 12px !important;
-            `;
-        }
-        
-        const sizeSelector = toolbar.querySelector('.size-selector');
-        if (sizeSelector) {
-            sizeSelector.style.cssText = `
-                display: flex !important;
-                justify-content: center !important;
-                width: 100% !important;
-                order: 2 !important;
-            `;
+        // Убираем показ кнопки "Сохранить в Telegram"
+        if (this.telegram.isInTelegram) {
+            this.telegram.tg.MainButton.hide();
         }
     }
-} 
+    
     changeGridSize(newSize) {
         if (this.editor) {
             this.editor.changeGridSize(parseInt(newSize));
@@ -363,8 +308,3 @@ function initSizeSelection() {
 
 // Инициализация при загрузке
 const sizeSelector = initSizeSelection();
-
-
-
-
-
