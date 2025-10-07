@@ -51,8 +51,6 @@ function setupEventListeners() {
     });
     
     // Обработчики для сетки
-    document.addEventListener('mousedown', startDrawing);
-    document.addEventListener('touchstart', startDrawing);
     document.addEventListener('mouseup', stopDrawing);
     document.addEventListener('touchend', stopDrawing);
 }
@@ -115,13 +113,9 @@ function createAdaptiveGrid(size) {
     // Очищаем сетку
     grid.innerHTML = '';
     
-    // Получаем доступные размеры
-    const wrapperStyle = window.getComputedStyle(wrapper);
-    const paddingX = parseFloat(wrapperStyle.paddingLeft) + parseFloat(wrapperStyle.paddingRight);
-    const paddingY = parseFloat(wrapperStyle.paddingTop) + parseFloat(wrapperStyle.paddingBottom);
-    
-    const availableWidth = wrapper.clientWidth - paddingX - 4;
-    const availableHeight = wrapper.clientHeight - paddingY - 4;
+    // Получаем доступные размеры (учитываем padding wrapper)
+    const availableWidth = wrapper.clientWidth - 40; // 20px padding с каждой стороны
+    const availableHeight = wrapper.clientHeight - 40;
     
     // Рассчитываем оптимальный размер пикселя
     const pixelSize = Math.floor(Math.min(
@@ -129,7 +123,7 @@ function createAdaptiveGrid(size) {
         availableHeight / size
     ));
     
-    const finalPixelSize = Math.max(2, pixelSize);
+    const finalPixelSize = Math.max(3, pixelSize); // Минимальный размер 3px
     
     // Устанавливаем размеры сетки
     grid.style.gridTemplateColumns = `repeat(${size}, ${finalPixelSize}px)`;
@@ -153,6 +147,12 @@ function createAdaptiveGrid(size) {
             }
         });
         
+        pixel.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isDrawing = true;
+            drawPixel(pixel);
+        });
+        
         pixel.addEventListener('touchmove', (e) => {
             e.preventDefault();
             const touch = e.touches[0];
@@ -168,7 +168,7 @@ function createAdaptiveGrid(size) {
     // Обновляем отображаемый размер
     updateCurrentSize(size);
     
-    console.log(`Grid created: ${size}x${size}, pixel size: ${finalPixelSize}px`);
+    console.log(`Grid created: ${size}x${size}, pixel size: ${finalPixelSize}px, available: ${availableWidth}x${availableHeight}`);
     return finalPixelSize;
 }
 
