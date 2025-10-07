@@ -11,18 +11,20 @@ class PixelArtEditor {
     init() {
         this.createGrid();
         this.setupEventListeners();
-        this.setupResizeHandler();
     }
     
     createGrid() {
         const container = document.getElementById('canvas');
+        if (!container) {
+            console.error('Canvas container not found');
+            return;
+        }
+        
         const pixelSize = this.calculatePixelSize();
         
         // Очищаем контейнер
         container.innerHTML = '';
         container.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
-        container.style.width = `${this.gridSize * pixelSize}px`;
-        container.style.height = `${this.gridSize * pixelSize}px`;
         
         this.canvas = [];
         
@@ -31,76 +33,31 @@ class PixelArtEditor {
             const pixel = document.createElement('div');
             pixel.className = 'pixel';
             pixel.dataset.index = i;
-            pixel.style.width = `${pixelSize}px`;
-            pixel.style.height = `${pixelSize}px`;
-            pixel.style.minWidth = `${pixelSize}px`;
-            pixel.style.minHeight = `${pixelSize}px`;
             
             container.appendChild(pixel);
             this.canvas.push({ element: pixel, color: null });
         }
         
-        console.log(`Created ${this.gridSize}x${this.gridSize} grid, pixel size: ${pixelSize}px, total width: ${this.gridSize * pixelSize}px`);
+        console.log(`Created ${this.gridSize}x${this.gridSize} grid`);
     }
     
     calculatePixelSize() {
-        // Получаем размеры workspace
-        const workspace = document.querySelector('.workspace');
-        const canvasContainer = document.querySelector('.canvas-container');
-        
-        if (!workspace || !canvasContainer) return 20;
-        
-        const workspaceWidth = workspace.clientWidth - 40; // учитываем padding
-        const workspaceHeight = workspace.clientHeight - 40;
-        const containerWidth = canvasContainer.clientWidth - 40; // учитываем padding контейнера
-        
-        // Вычисляем доступную ширину (берем минимальную из workspace и container)
-        const availableWidth = Math.min(workspaceWidth, containerWidth);
-        
-        // Вычисляем размер пикселя на основе доступной ширины
-        let pixelSize = Math.floor(availableWidth / this.gridSize);
-        
-        // Для маленьких экранов делаем пиксели меньше
-        if (window.innerWidth <= 480) {
-            pixelSize = Math.max(8, pixelSize); // минимальный размер для мобильных
-        } else {
-            pixelSize = Math.max(12, pixelSize); // минимальный размер для десктопа
-        }
-        
-        // Максимальный размер пикселя
-        pixelSize = Math.min(30, pixelSize);
-        
-        console.log(`Available width: ${availableWidth}px, Grid: ${this.gridSize}, Pixel size: ${pixelSize}px`);
-        return pixelSize;
-    }
-    
-    setupResizeHandler() {
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                if (this.gridSize) {
-                    this.createGrid();
-                }
-            }, 250);
-        });
+        // Простая логика расчета размера пикселя
+        const baseSize = window.innerWidth <= 480 ? 15 : 20;
+        return Math.max(8, Math.min(30, Math.floor(baseSize * 16 / this.gridSize)));
     }
     
     setupEventListeners() {
         const container = document.getElementById('canvas');
         if (!container) return;
         
-        // Удаляем старые обработчики
-        container.replaceWith(container.cloneNode(true));
-        const newContainer = document.getElementById('canvas');
-        
-        newContainer.addEventListener('mousedown', (e) => this.startDrawing(e));
-        newContainer.addEventListener('mousemove', (e) => this.draw(e));
-        newContainer.addEventListener('touchstart', (e) => {
+        container.addEventListener('mousedown', (e) => this.startDrawing(e));
+        container.addEventListener('mousemove', (e) => this.draw(e));
+        container.addEventListener('touchstart', (e) => {
             e.preventDefault();
             this.startDrawing(e);
         });
-        newContainer.addEventListener('touchmove', (e) => {
+        container.addEventListener('touchmove', (e) => {
             e.preventDefault();
             this.draw(e);
         });
@@ -108,22 +65,19 @@ class PixelArtEditor {
         document.addEventListener('mouseup', () => this.stopDrawing());
         document.addEventListener('touchend', () => this.stopDrawing());
         
-        const tools = document.querySelectorAll('.tool');
-        tools.forEach(tool => {
-            tool.addEventListener('click', (e) => {
-                tools.forEach(t => t.classList.remove('active'));
+        // Обработчики для инструментов
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tool')) {
+                document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
                 e.target.classList.add('active');
                 this.currentTool = e.target.dataset.tool;
-            });
-        });
-        
-        const colors = document.querySelectorAll('.color');
-        colors.forEach(color => {
-            color.addEventListener('click', (e) => {
-                colors.forEach(c => c.classList.remove('active'));
+            }
+            
+            if (e.target.classList.contains('color')) {
+                document.querySelectorAll('.color').forEach(c => c.classList.remove('active'));
                 e.target.classList.add('active');
                 this.currentColor = e.target.dataset.color;
-            });
+            }
         });
     }
     
@@ -257,9 +211,11 @@ class PixelArtEditor {
             
             setTimeout(() => {
                 data.pixels.forEach((color, index) => {
-                    if (index < this.canvas.length) {
+                    if (index < this.canvas.length && this.canvas[index]) {
                         this.canvas[index].color = color;
-                        this.canvas[index].element.style.backgroundColor = color;
+                        if (this.canvas[index].element) {
+                            this.canvas[index].element.style.backgroundColor = color;
+                        }
                     }
                 });
             }, 100);
