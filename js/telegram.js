@@ -4,6 +4,7 @@ class TelegramIntegration {
         this.initParams = null;
         this.user = null;
         this.isTelegram = false;
+        this.onBackButtonCallback = null; // Колбэк для кнопки назад
     }
 
     init() {
@@ -26,7 +27,7 @@ class TelegramIntegration {
         this.initParams = this.tg.initData;
         
         this.setupTheme();
-        this.setupMainButton();
+        this.setupBackButton(); // Настраиваем кнопку назад
         this.setupEventListeners();
         
         console.log('Telegram Web App ready. User:', this.user);
@@ -63,18 +64,44 @@ class TelegramIntegration {
         document.documentElement.style.setProperty('--tg-theme-text-color', this.tg.themeParams.text_color || (theme === 'dark' ? '#ffffff' : '#000000'));
     }
 
-    setupMainButton() {
-        // Убираем настройку MainButton - она нам не нужна
-        this.tg.MainButton.hide();
+    setupBackButton() {
+        // Настраиваем кнопку "Назад"
+        this.tg.BackButton.onClick(this.handleBackButton.bind(this));
+    }
+
+    handleBackButton() {
+        if (this.onBackButtonCallback) {
+            this.onBackButtonCallback();
+        } else {
+            // По умолчанию - закрываем приложение
+            this.tg.close();
+        }
     }
 
     setupEventListeners() {
-        // Убираем обработчик клика по MainButton
         this.tg.onEvent('viewportChanged', this.onViewportChanged.bind(this));
     }
 
     onViewportChanged() {
         this.adjustLayout();
+    }
+
+    // Метод для установки колбэка при нажатии "Назад"
+    setBackButtonCallback(callback) {
+        this.onBackButtonCallback = callback;
+    }
+
+    // Метод для показа/скрытия кнопки назад
+    showBackButton() {
+        if (this.isTelegram) {
+            this.tg.BackButton.show();
+        }
+    }
+
+    hideBackButton() {
+        if (this.isTelegram) {
+            this.tg.BackButton.hide();
+        }
     }
 
     sendDataToBot(data) {
