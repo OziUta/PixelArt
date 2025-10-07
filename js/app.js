@@ -85,18 +85,6 @@ class PixelArtApp {
                 sizeOptions.forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
                 this.selectedSize = parseInt(option.dataset.size);
-                
-                if (this.telegram.isInTelegram) {
-                    setTimeout(() => {
-                        const buttons = document.querySelector('.size-selection-buttons');
-                        if (buttons) {
-                            buttons.scrollIntoView({ 
-                                behavior: 'smooth',
-                                block: 'nearest'
-                            });
-                        }
-                    }, 300);
-                }
             });
         });
         
