@@ -241,7 +241,6 @@ class PixelArtApp {
                         <select id="gridSizeSelect">
                             <option value="8">8x8</option>
                             <option value="16" selected>16x16</option>
-                            <option value="32">32x32</option>
                         </select>
                     </div>
                 </div>
