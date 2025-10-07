@@ -246,57 +246,20 @@ body {
 }
 
 /* Экран выбора размера */
-#sizeSelection {
-    background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px 0;
-    overflow-y: auto;
-}
-
-.size-selection-container {
-    max-width: 500px;
-    width: 90%;
-    text-align: center;
-    animation: slideInFromBottom 0.8s ease-out;
-    margin: auto;
-}
-
-.size-header {
-    margin-bottom: 30px;
-    animation: fadeIn 1s ease-out 0.3s both;
-}
-
-.size-header h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 0 #000;
-}
-
-.size-header p {
-    opacity: 0.9;
-    font-size: 0.9rem;
-}
-
-.size-options-wrapper {
-    max-height: 60vh;
-    overflow-y: auto;
-    margin-bottom: 30px;
-    padding: 10px 0;
-}
-
 .size-options {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
     padding: 10px;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .size-option {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    padding: 15px 10px;
+    padding: 20px 15px;
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
@@ -305,139 +268,43 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    min-height: 140px;
+    gap: 12px;
+    min-height: 160px;
     justify-content: center;
 }
 
 .size-option:nth-child(1) { animation-delay: 0.4s; }
 .size-option:nth-child(2) { animation-delay: 0.5s; }
-.size-option:nth-child(3) { animation-delay: 0.6s; }
 
-.size-option:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-3px);
-}
-
-.size-option.active {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: #ffeb3b;
-    transform: scale(1.03);
-}
-
-.size-preview {
-    width: 80px;
-    height: 80px;
-    background: #1a1a1a;
-    border-radius: 6px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.grid-preview {
-    display: grid;
-    gap: 1px;
-    background: #333;
-    padding: 2px;
-    border-radius: 2px;
-}
-
-.size-preview[data-size="8"] .grid-preview {
-    grid-template-columns: repeat(8, 6px);
-    grid-template-rows: repeat(8, 6px);
-}
-
-.size-preview[data-size="16"] .grid-preview {
-    grid-template-columns: repeat(16, 3px);
-    grid-template-rows: repeat(16, 3px);
-}
-
-.size-preview[data-size="32"] .grid-preview {
-    grid-template-columns: repeat(32, 1.5px);
-    grid-template-rows: repeat(32, 1.5px);
-}
-
-.grid-preview::before {
-    content: '';
+.size-description {
     display: block;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(45deg, transparent 49%, rgba(255,255,255,0.2) 50%, transparent 51%),
-        linear-gradient(-45deg, transparent 49%, rgba(255,255,255,0.2) 50%, transparent 51%);
-    background-size: 8px 8px;
-}
-
-.size-label {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
-
-.size-selection-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 0 10px;
-}
-
-.size-selection-buttons button {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Courier New', monospace;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 120px;
-}
-
-.back-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.back-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
-
-.confirm-btn {
-    background: #27ae60;
-    color: white;
-    border: 2px solid #27ae60;
-}
-
-.confirm-btn:hover {
-    background: #219a52;
-    transform: translateY(-2px);
+    font-size: 0.9rem;
+    opacity: 0.8;
+    color: var(--text-secondary);
+    margin-top: 5px;
 }
 
 /* Адаптивность для очень маленьких экранов */
 @media (max-width: 480px) {
     .size-options {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        max-width: 300px;
+    }
+    
+    .size-option {
+        min-height: 140px;
+        padding: 15px 10px;
     }
 }
 
 @media (max-width: 320px) {
     .size-options {
-        grid-template-columns: 1fr;
         gap: 12px;
     }
     
     .size-option {
-        min-height: 120px;
+        min-height: 130px;
         padding: 12px 8px;
     }
     
@@ -446,45 +313,24 @@ body {
         height: 70px;
     }
     
-    .size-preview[data-size="8"] .grid-preview {
-        grid-template-columns: repeat(8, 5px);
-        grid-template-rows: repeat(8, 5px);
-    }
-    
-    .size-preview[data-size="16"] .grid-preview {
-        grid-template-columns: repeat(16, 2.2px);
-        grid-template-rows: repeat(16, 2.2px);
-    }
-    
-    .size-preview[data-size="32"] .grid-preview {
-        grid-template-columns: repeat(32, 1.1px);
-        grid-template-rows: repeat(32, 1.1px);
-    }
-    
     .size-label {
         font-size: 1rem;
     }
     
-    .size-selection-buttons button {
-        padding: 10px 20px;
-        min-width: 100px;
-        font-size: 0.9rem;
+    .size-description {
+        font-size: 0.8rem;
     }
 }
 
 /* Для ландшафтной ориентации на мобильных */
 @media (max-height: 500px) and (orientation: landscape) {
-    #sizeSelection {
-        padding: 10px 0;
-        align-items: center;
-    }
-    
-    .size-options-wrapper {
-        max-height: 50vh;
+    .size-options {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 350px;
     }
     
     .size-option {
-        min-height: 110px;
+        min-height: 120px;
         padding: 10px 8px;
     }
     
@@ -777,6 +623,7 @@ body {
 .is-telegram .share-btn {
     display: none !important;
 }
+
 
 
 
