@@ -166,5 +166,16 @@ class TelegramIntegration {
         return this.initParams;
     }
 }
-
+// В telegram.js
+if (window.Telegram && window.Telegram.WebApp) {
+    Telegram.WebApp.onEvent('viewportChanged', function() {
+        // Обновляем сетку при изменении viewport в Telegram
+        setTimeout(() => {
+            if (currentScreen === 'workspace') {
+                gridManager.setSize(currentGridSize);
+            }
+        }, 100);
+    });
+}
 const telegramApp = new TelegramIntegration();
+
