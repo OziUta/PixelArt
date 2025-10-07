@@ -283,3 +283,29 @@ let app;
 document.addEventListener('DOMContentLoaded', () => {
     app = new PixelArtApp();
 });
+// В файле app.js добавить:
+function initSizeSelection() {
+    const sizeOptions = document.querySelectorAll('.size-option');
+    let selectedSize = 16; // размер по умолчанию
+    
+    sizeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Убираем активный класс у всех опций
+            sizeOptions.forEach(opt => opt.classList.remove('active'));
+            // Добавляем активный класс к выбранной опции
+            this.classList.add('active');
+            // Сохраняем выбранный размер
+            selectedSize = parseInt(this.getAttribute('data-size'));
+        });
+    });
+    
+    // Активируем размер по умолчанию
+    sizeOptions[1].classList.add('active'); // 16x16
+    
+    return {
+        getSelectedSize: () => selectedSize
+    };
+}
+
+// Инициализация при загрузке
+const sizeSelector = initSizeSelection();
