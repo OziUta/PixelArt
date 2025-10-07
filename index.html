@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Art Creator</title>
+    <meta name="telegram:app_id" content="YOUR_APP_ID">
+    <meta name="telegram:theme" content="dark">
+    <meta name="telegram:bg_color" content="#1a1a1a">
+    <meta name="telegram:text_color" content="#ffffff">
+    <meta name="telegram:hint_color" content="#aaaaaa">
+    <meta name="telegram:button_color" content="#3390ec">
+    <meta name="telegram:button_text_color" content="#ffffff">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Экран загрузки -->
+    <div id="loadingScreen" class="screen active">
+        <div class="loading-container">
+            <div class="pixel-loader">
+                <div class="pixel" style="--delay: 0"></div>
+                <div class="pixel" style="--delay: 1"></div>
+                <div class="pixel" style="--delay: 2"></div>
+                <div class="pixel" style="--delay: 3"></div>
+            </div>
+            <h1 class="loading-title">Pixel Art Creator</h1>
+            <p class="loading-subtitle">Загрузка...</p>
+        </div>
+    </div>
+
+    <!-- Главное меню -->
+    <div id="mainMenu" class="screen">
+        <div class="menu-container">
+            <div class="menu-header">
+                <h1 class="menu-title">Pixel Art</h1>
+                <p class="menu-subtitle">Создавайте пиксельные шедевры</p>
+            </div>
+            
+            <div class="menu-buttons">
+                <button class="menu-btn new-project" onclick="app.startNewProject()">
+                    <span class="btn-icon">🎨</span>
+                    Новый рисунок
+                </button>
+                
+                <button class="menu-btn load-project" onclick="app.loadProject()">
+                    <span class="btn-icon">📁</span>
+                    Загрузить проект
+                </button>
+                
+                <button class="menu-btn gallery" onclick="app.openGallery()">
+                    <span class="btn-icon">🖼️</span>
+                    Галерея
+                </button>
+                
+                <button class="menu-btn tutorial" onclick="app.showTutorial()">
+                    <span class="btn-icon">❓</span>
+                    Обучение
+                </button>
+            </div>
+            
+            <div class="menu-footer">
+                <div class="recent-projects">
+                    <h3>Недавние проекты</h3>
+                    <div class="project-thumbnails" id="recentProjects">
+                        <!-- Динамически генерируемые миниатюры -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран выбора размера -->
+<div id="sizeSelection" class="screen">
+    <div class="size-selection-container">
+        <div class="size-header">
+            <h1>Выберите размер сетки</h1>
+            <p>Вы можете изменить размер позже в настройках</p>
+        </div>
+        
+        <div class="size-options-wrapper">
+            <div class="size-options">
+                <div class="size-option" data-size="8">
+                    <div class="size-preview" data-size="8">
+                        <div class="grid-preview"></div>
+                    </div>
+                    <span class="size-label">8×8</span>
+                </div>
+                
+                <div class="size-option" data-size="16">
+                    <div class="size-preview" data-size="16">
+                        <div class="grid-preview"></div>
+                    </div>
+                    <span class="size-label">16×16</span>
+                </div>
+                
+                <div class="size-option" data-size="32">
+                    <div class="size-preview" data-size="32">
+                        <div class="grid-preview"></div>
+                    </div>
+                    <span class="size-label">32×32</span>
+                </div>
+                
+                <div class="size-option" data-size="64">
+                    <div class="size-preview" data-size="64">
+                        <div class="grid-preview"></div>
+                    </div>
+                    <span class="size-label">64×64</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="size-selection-buttons">
+            <button class="back-btn" onclick="app.returnToMenu()">Назад</button>
+            <button class="confirm-btn" onclick="app.confirmSizeSelection()">Продолжить</button>
+        </div>
+    </div>
+</div>
+
+    <!-- Рабочая область -->
+    <div id="workspace" class="screen">
+        <div class="pixel-art-app" id="pixelArtApp">
+            <!-- Динамически генерируется -->
+        </div>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="js/telegram.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/editor.js"></script>
+</body>
+</html>
