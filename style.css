@@ -507,35 +507,24 @@ body {
     flex-direction: column;
 }
 
-/* Панель инструментов - ОБНОВЛЕННАЯ СТРУКТУРА */
+/* Панель инструментов */
 .toolbar {
     background: color-mix(in srgb, var(--bg-primary) 90%, #000 10%);
     padding: 15px;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    border-bottom: 2px solid color-mix(in srgb, var(--bg-primary) 80%, #000 20%);
-}
-
-.toolbar-row {
-    display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid color-mix(in srgb, var(--bg-primary) 80%, #000 20%);
+    flex-wrap: wrap;
     gap: 15px;
-    width: 100%;
 }
 
-/* Первая строка: кнопка назад слева + палитра цветов справа */
-.toolbar-row:first-child {
+.toolbar-left, .toolbar-center, .toolbar-right {
+    display: flex;
     align-items: center;
+    gap: 15px;
 }
 
-/* Вторая строка: инструменты слева + выбор размера справа */
-.toolbar-row:last-child {
-    align-items: center;
-}
-
-/* Кнопка назад - фиксированная слева */
 .back-btn {
     background: #e74c3c;
     color: white;
@@ -545,8 +534,6 @@ body {
     cursor: pointer;
     font-family: 'Courier New', monospace;
     transition: all 0.3s ease;
-    white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .back-btn:hover {
@@ -554,11 +541,9 @@ body {
     transform: translateX(-3px);
 }
 
-/* Инструменты */
 .tools {
     display: flex;
     gap: 10px;
-    flex-shrink: 0;
 }
 
 .tool {
@@ -586,14 +571,10 @@ body {
     background: #666;
 }
 
-/* Палитра цветов - занимает всё доступное пространство */
 .color-palette {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    justify-content: flex-end;
-    flex: 1;
-    align-items: center;
 }
 
 .color {
@@ -614,7 +595,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Выбор размера */
 .size-selector {
     display: flex;
     align-items: center;
@@ -622,8 +602,6 @@ body {
     background: rgba(255,255,255,0.1);
     padding: 8px 15px;
     border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .size-selector select {
@@ -635,160 +613,7 @@ body {
     font-family: 'Courier New', monospace;
     cursor: pointer;
 }
-/* Адаптивность для мобильных телефонов */
-@media (max-width: 480px) {
-    .toolbar {
-        padding: 10px;
-        gap: 15px;
-    }
-    
-    .toolbar-row {
-        flex-direction: row !important;
-        gap: 10px;
-        align-items: center;
-    }
-    
-    .toolbar-row:first-child {
-        flex-direction: row !important;
-        gap: 10px;
-    }
-    
-    .toolbar-row:last-child {
-        flex-direction: row !important;
-        gap: 10px;
-    }
-    
-    .back-btn {
-        width: auto !important;
-        max-width: none !important;
-        order: 1 !important;
-        flex-shrink: 0;
-        padding: 8px 12px;
-    }
-    
-    .color-palette {
-        justify-content: flex-end !important;
-        width: auto !important;
-        order: 2 !important;
-        gap: 6px;
-        flex: 1;
-    }
-    
-    .tools {
-        justify-content: flex-start !important;
-        width: auto !important;
-        order: 1 !important;
-        gap: 8px;
-        flex: 1;
-    }
-    
-    .size-selector {
-        justify-content: flex-end !important;
-        width: auto !important;
-        order: 2 !important;
-        flex-shrink: 0;
-    }
-    
-    .tool {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-    
-    .color {
-        width: 28px;
-        height: 28px;
-    }
-    
-    .size-selector {
-        font-size: 0.9rem;
-        padding: 6px 10px;
-    }
-    
-    .size-selector select {
-        padding: 4px 8px;
-        font-size: 0.9rem;
-    }
-}
 
-/* Специальные стили для Telegram на мобильных */
-.is-telegram .toolbar .toolbar-row {
-    flex-direction: row !important;
-    gap: 10px !important;
-}
-
-.is-telegram .toolbar .back-btn {
-    width: auto !important;
-    max-width: none !important;
-    order: 1 !important;
-    flex-shrink: 0 !important;
-}
-
-.is-telegram .toolbar .color-palette {
-    justify-content: flex-end !important;
-    width: auto !important;
-    order: 2 !important;
-    flex: 1 !important;
-}
-
-.is-telegram .toolbar .tools {
-    justify-content: flex-start !important;
-    width: auto !important;
-    order: 1 !important;
-    flex: 1 !important;
-}
-
-.is-telegram .toolbar .size-selector {
-    justify-content: flex-end !important;
-    width: auto !important;
-    order: 2 !important;
-    flex-shrink: 0 !important;
-}
-
-/* Для очень маленьких экранов */
-@media (max-width: 360px) {
-    .toolbar {
-        padding: 8px;
-        gap: 12px;
-    }
-    
-    .toolbar-row {
-        gap: 8px;
-    }
-    
-    .color-palette {
-        gap: 4px;
-    }
-    
-    .color {
-        width: 25px;
-        height: 25px;
-    }
-    
-    .tools {
-        gap: 6px;
-    }
-    
-    .tool {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
-    }
-    
-    .back-btn {
-        padding: 6px 10px;
-        font-size: 0.9rem;
-    }
-    
-    .size-selector {
-        padding: 5px 8px;
-        font-size: 0.8rem;
-    }
-    
-    .size-selector span {
-        display: none; /* Скрываем текст "Размер:" на очень маленьких экранах */
-    }
-}
 /* Основная рабочая область */
 .workspace {
     flex: 1;
@@ -872,7 +697,20 @@ body {
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* Адаптивность для планшетов */
+/* Специфичные стили для Telegram */
+.telegram-only {
+    display: none;
+}
+
+.is-telegram .telegram-only {
+    display: block;
+}
+
+.is-telegram .non-telegram {
+    display: none;
+}
+
+/* Адаптивность */
 @media (max-width: 768px) {
     .toolbar {
         flex-direction: column;
@@ -896,58 +734,16 @@ body {
     }
 }
 
-/* Адаптивность для мобильных телефонов */
 @media (max-width: 480px) {
-    .toolbar-row {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .toolbar-row:first-child {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .toolbar-row:last-child {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .back-btn {
-        width: 100%;
-        max-width: 100%;
-        order: 1;
-    }
-    
-    .color-palette {
-        justify-content: center;
-        width: 100%;
-        order: 2;
-        gap: 8px;
-    }
-    
-    .tools {
-        justify-content: center;
-        width: 100%;
-        order: 1;
-        gap: 12px;
-    }
-    
-    .size-selector {
-        justify-content: center;
-        width: 100%;
-        order: 2;
-    }
-    
     .tool {
-        width: 50px;
-        height: 50px;
-        font-size: 1.3rem;
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
     }
     
     .color {
-        width: 32px;
-        height: 32px;
+        width: 25px;
+        height: 25px;
     }
     
     .size-preview {
@@ -963,36 +759,6 @@ body {
         padding: 12px 20px;
         font-size: 1rem;
     }
-}
-
-/* Специальные стили для Telegram на мобильных */
-.is-telegram .toolbar .toolbar-row {
-    flex-direction: column !important;
-    gap: 12px !important;
-}
-
-.is-telegram .toolbar .back-btn {
-    width: 100% !important;
-    max-width: 100% !important;
-    order: 1 !important;
-}
-
-.is-telegram .toolbar .color-palette {
-    justify-content: center !important;
-    width: 100% !important;
-    order: 2 !important;
-}
-
-.is-telegram .toolbar .tools {
-    justify-content: center !important;
-    width: 100% !important;
-    order: 1 !important;
-}
-
-.is-telegram .toolbar .size-selector {
-    justify-content: center !important;
-    width: 100% !important;
-    order: 2 !important;
 }
 
 /* Адаптация для viewport Telegram */
@@ -1028,57 +794,3 @@ body {
 .is-telegram .share-btn {
     display: none !important;
 }
-/* Дополнительные стили для точного позиционирования */
-.toolbar-row.first-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.toolbar-row.second-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Гарантируем, что на мобильных строка остаётся горизонтальной */
-@media (max-width: 480px) {
-    .toolbar-row.first-row,
-    .toolbar-row.second-row {
-        flex-direction: row !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-    }
-    
-    .first-row .back-btn {
-        flex-shrink: 0;
-        margin-right: 10px;
-    }
-    
-    .first-row .color-palette {
-        flex: 1;
-        justify-content: flex-end;
-    }
-    
-    .second-row .tools {
-        flex: 1;
-        justify-content: flex-start;
-    }
-    
-    .second-row .size-selector {
-        flex-shrink: 0;
-        margin-left: 10px;
-    }
-}
-
-/* Форсированное переопределение для Telegram */
-.is-telegram .toolbar-row.first-row,
-.is-telegram .toolbar-row.second-row {
-    flex-direction: row !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-}
-
-
