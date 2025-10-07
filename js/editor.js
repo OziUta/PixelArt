@@ -1,6 +1,6 @@
 class PixelArtEditor {
     constructor(gridSize = 16) {
-        this.gridSize = gridSize;
+         this.gridSize = gridSize === 32 ? 16 : gridSize; // Если передали 32, меняем на 16
         this.currentColor = '#ff0000';
         this.currentTool = 'brush';
         this.isDrawing = false;
@@ -158,7 +158,11 @@ class PixelArtEditor {
     }
     
     changeGridSize(newSize) {
-        this.gridSize = parseInt(newSize);
+        // Ограничиваем возможные размеры
+        const allowedSizes = [8, 16];
+        const finalSize = allowedSizes.includes(parseInt(newSize)) ? parseInt(newSize) : 16;
+        
+        this.gridSize = finalSize;
         this.createGrid();
         this.setupEventListeners();
     }
@@ -256,3 +260,4 @@ class PixelArtEditor {
         return canvas.toDataURL();
     }
 }
+
