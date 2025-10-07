@@ -19,7 +19,6 @@ class PixelArtApp {
         
         if (this.telegram.isInTelegram) {
             document.body.classList.add('is-telegram');
-            this.fixMobileScrolling();
         }
         
         const loadTime = this.telegram.isInTelegram ? 1500 : 2500;
@@ -29,20 +28,6 @@ class PixelArtApp {
         
         this.initMainMenu();
         this.initSizeSelection();
-    }
-    
-    fixMobileScrolling() {
-        document.addEventListener('touchmove', function(e) {
-            if (e.scale !== 1) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        document.addEventListener('touchstart', function(e) {
-            if (e.touches.length > 1) {
-                e.preventDefault();
-            }
-        }, { passive: false });
     }
     
     switchScreen(targetScreen) {
@@ -56,7 +41,8 @@ class PixelArtApp {
                 currentElement.classList.remove('active', 'screen-transition');
                 targetElement.classList.add('active');
                 
-                if (targetScreen === 'sizeSelection' && this.telegram.isInTelegram) {
+                // Прокручиваем вверх при переходе на экран выбора размера
+                if (targetScreen === 'sizeSelection') {
                     setTimeout(() => {
                         targetElement.scrollTop = 0;
                     }, 100);
@@ -88,6 +74,7 @@ class PixelArtApp {
             });
         });
         
+        // Активируем размер по умолчанию
         const defaultOption = document.querySelector('.size-option[data-size="16"]');
         if (defaultOption) {
             defaultOption.classList.add('active');
@@ -187,7 +174,7 @@ class PixelArtApp {
             
             <main class="workspace">
                 <div class="canvas-container">
-                    <div class="pixel-grid" id="canvas"></div>
+                    <div class="pixel-grid" id="canvas" data-size="${this.selectedSize}"></div>
                 </div>
             </main>
             
@@ -197,13 +184,16 @@ class PixelArtApp {
             </footer>
         `;
         
+        // Устанавливаем выбранный размер в селекторе
         const sizeSelect = document.getElementById('gridSizeSelect');
         if (sizeSelect) {
             sizeSelect.value = this.selectedSize;
         }
         
+        // Инициализация редактора
         this.editor = new PixelArtEditor(this.selectedSize);
         
+        // Показываем основную кнопку Telegram если нужно
         if (this.telegram.isInTelegram) {
             this.telegram.tg.MainButton.setText('Сохранить в Telegram');
             this.telegram.tg.MainButton.show();
@@ -213,6 +203,14 @@ class PixelArtApp {
     changeGridSize(newSize) {
         if (this.editor) {
             this.editor.changeGridSize(parseInt(newSize));
+            
+            // Обновляем data-size атрибут
+            const canvas = document.getElementById('canvas');
+            if (canvas) {
+                canvas.setAttribute('data-size', newSize);
+            }
+            
+            // Обновляем текст в статус-баре
             const statusBar = document.querySelector('.status-bar span');
             if (statusBar) {
                 statusBar.textContent = `Размер: ${newSize}x${newSize}`;
@@ -221,10 +219,12 @@ class PixelArtApp {
     }
     
     returnToMenu() {
+        // Сохраняем текущий проект перед выходом
         if (this.editor) {
             this.saveCurrentProject();
         }
         
+        // Скрываем основную кнопку Telegram
         if (this.telegram.isInTelegram) {
             this.telegram.tg.MainButton.hide();
         }
@@ -239,6 +239,7 @@ class PixelArtApp {
         const projectData = this.editor.getProjectData();
         const recentProjects = JSON.parse(localStorage.getItem('recentProjects') || '[]');
         
+        // Добавляем новый проект в начало
         recentProjects.unshift({
             name: `Проект ${new Date().toLocaleDateString()}`,
             data: projectData,
@@ -248,6 +249,7 @@ class PixelArtApp {
             thumbnail: this.editor.generateThumbnail()
         });
         
+        // Ограничиваем количество сохраняемых проектов
         if (recentProjects.length > 10) {
             recentProjects.pop();
         }
@@ -262,6 +264,7 @@ class PixelArtApp {
             return;
         }
         
+        // Для простоты загружаем первый проект
         this.loadSavedProject(recentProjects[0]);
     }
     
@@ -270,6 +273,7 @@ class PixelArtApp {
         this.switchScreen('workspace');
         setTimeout(() => {
             this.initWorkspace();
+            // Загрузка данных проекта в редактор
             if (this.editor && project.data) {
                 setTimeout(() => {
                     this.editor.loadProject(project.data);
