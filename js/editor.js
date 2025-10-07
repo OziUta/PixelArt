@@ -17,6 +17,8 @@ class PixelArtEditor {
         const container = document.getElementById('canvas');
         const pixelSize = this.calculatePixelSize();
         
+        // Добавляем класс для адаптивных размеров
+        container.className = `pixel-grid canvas-${this.gridSize}x${this.gridSize}`;
         container.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
         container.innerHTML = '';
         
@@ -26,17 +28,42 @@ class PixelArtEditor {
             const pixel = document.createElement('div');
             pixel.className = 'pixel';
             pixel.dataset.index = i;
-            pixel.style.width = `${pixelSize}px`;
-            pixel.style.height = `${pixelSize}px`;
             
             container.appendChild(pixel);
             this.canvas.push({ element: pixel, color: null });
         }
+        
+        // Обновляем размеры контейнера
+        this.updateContainerSize();
     }
     
     calculatePixelSize() {
-        const maxSize = window.telegramApp?.isInTelegram ? 600 : 800;
-        return Math.max(4, Math.min(20, Math.floor(maxSize / this.gridSize)));
+        // Размеры адаптируются через CSS переменные
+        return 0; // Размер теперь управляется CSS
+    }
+    
+    updateContainerSize() {
+        const container = document.getElementById('canvas');
+        const pixelSize = this.getComputedPixelSize();
+        const totalSize = this.gridSize * pixelSize;
+        
+        // Устанавливаем явные размеры для контейнера
+        container.style.width = `${totalSize}px`;
+        container.style.height = `${totalSize}px`;
+    }
+    
+    getComputedPixelSize() {
+        const testPixel = document.createElement('div');
+        testPixel.className = 'pixel';
+        testPixel.style.width = 'var(--pixel-size)';
+        testPixel.style.height = 'var(--pixel-size)';
+        testPixel.style.visibility = 'hidden';
+        document.body.appendChild(testPixel);
+        
+        const size = Math.max(testPixel.offsetWidth, testPixel.offsetHeight);
+        document.body.removeChild(testPixel);
+        
+        return size || 15; // fallback размер
     }
     
     setupEventListeners() {
