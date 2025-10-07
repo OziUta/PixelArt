@@ -507,7 +507,7 @@ body {
     flex-direction: column;
 }
 
-/* Панель инструментов - ПЕРЕРАБОТАНА */
+/* Панель инструментов - ОБНОВЛЕННАЯ СТРУКТУРА */
 .toolbar {
     background: color-mix(in srgb, var(--bg-primary) 90%, #000 10%);
     padding: 15px;
@@ -521,27 +521,21 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
     gap: 15px;
+    width: 100%;
 }
 
 .toolbar-row:first-child {
-    /* Первая строка: кнопка назад + палитра цветов */
-    align-items: flex-start;
+    /* Первая строка: кнопка назад слева + палитра цветов занимает оставшееся пространство */
+    align-items: center;
 }
 
 .toolbar-row:last-child {
-    /* Вторая строка: инструменты + выбор размера */
+    /* Вторая строка: инструменты слева + выбор размера справа */
     align-items: center;
 }
 
-.toolbar-left, .toolbar-center, .toolbar-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* Кнопка назад */
+/* Кнопка назад - фиксированная слева */
 .back-btn {
     background: #e74c3c;
     color: white;
@@ -552,6 +546,7 @@ body {
     font-family: 'Courier New', monospace;
     transition: all 0.3s ease;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .back-btn:hover {
@@ -559,10 +554,21 @@ body {
     transform: translateX(-3px);
 }
 
-/* Инструменты */
+/* Палитра цветов - занимает всё доступное пространство */
+.color-palette {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex: 1;
+    align-items: center;
+}
+
+/* Инструменты - фиксированные слева */
 .tools {
     display: flex;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .tool {
@@ -590,34 +596,7 @@ body {
     background: #666;
 }
 
-/* Палитра цветов */
-.color-palette {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    flex: 1;
-}
-
-.color {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.color.active {
-    border-color: white;
-    transform: scale(1.2);
-}
-
-.color:hover {
-    transform: scale(1.1);
-}
-
-/* Выбор размера */
+/* Выбор размера - фиксированный справа */
 .size-selector {
     display: flex;
     align-items: center;
@@ -626,6 +605,7 @@ body {
     padding: 8px 15px;
     border-radius: 20px;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .size-selector select {
@@ -636,6 +616,92 @@ body {
     border-radius: 5px;
     font-family: 'Courier New', monospace;
     cursor: pointer;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .toolbar {
+        padding: 12px;
+        gap: 12px;
+    }
+    
+    .toolbar-row {
+        gap: 12px;
+    }
+    
+    .color-palette {
+        gap: 6px;
+        justify-content: center;
+    }
+    
+    .color {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .tools {
+        gap: 8px;
+    }
+    
+    .tool {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .toolbar {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .toolbar-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .toolbar-row:first-child {
+        /* На мобильных: кнопка назад сверху, палитра снизу */
+        flex-direction: column;
+    }
+    
+    .toolbar-row:last-child {
+        /* На мобильных: инструменты сверху, выбор размера снизу */
+        flex-direction: column;
+    }
+    
+    .color-palette {
+        justify-content: center;
+        order: 2;
+    }
+    
+    .back-btn {
+        order: 1;
+        align-self: center;
+    }
+    
+    .tools {
+        justify-content: center;
+        order: 1;
+    }
+    
+    .size-selector {
+        justify-content: center;
+        order: 2;
+    }
+    
+    .tool {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .color {
+        width: 25px;
+        height: 25px;
+    }
 }
 
 /* Основная рабочая область */
@@ -856,3 +922,4 @@ body {
 .is-telegram .share-btn {
     display: none !important;
 }
+
