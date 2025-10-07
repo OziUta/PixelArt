@@ -13,65 +13,94 @@ class PixelArtEditor {
         this.setupEventListeners();
         this.setupResizeHandler();
     }
-    setupResizeHandler() {
-        // Пересоздаем сетку при изменении размера окна
-        window.addEventListener('resize', () => {
-            if (this.gridSize) {
-                this.createGrid();
-            }
-        });
-    }
     
     createGrid() {
         const container = document.getElementById('canvas');
         const pixelSize = this.calculatePixelSize();
         
-        container.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
+        // Очищаем контейнер
         container.innerHTML = '';
+        container.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
+        container.style.width = `${this.gridSize * pixelSize}px`;
+        container.style.height = `${this.gridSize * pixelSize}px`;
         
         this.canvas = [];
         
+        // Создаем пиксели
         for (let i = 0; i < this.gridSize * this.gridSize; i++) {
             const pixel = document.createElement('div');
             pixel.className = 'pixel';
             pixel.dataset.index = i;
             pixel.style.width = `${pixelSize}px`;
             pixel.style.height = `${pixelSize}px`;
+            pixel.style.minWidth = `${pixelSize}px`;
+            pixel.style.minHeight = `${pixelSize}px`;
             
             container.appendChild(pixel);
             this.canvas.push({ element: pixel, color: null });
         }
+        
+        console.log(`Created ${this.gridSize}x${this.gridSize} grid, pixel size: ${pixelSize}px, total width: ${this.gridSize * pixelSize}px`);
     }
     
     calculatePixelSize() {
-        // Получаем размеры контейнера
-        const container = document.querySelector('.canvas-container');
-        if (!container) return 20; // fallback размер
+        // Получаем размеры workspace
+        const workspace = document.querySelector('.workspace');
+        const canvasContainer = document.querySelector('.canvas-container');
         
-        const containerWidth = container.clientWidth - 40; // учитываем padding
-        const containerHeight = container.clientHeight - 40;
+        if (!workspace || !canvasContainer) return 20;
         
-        // Вычисляем максимальный размер пикселя, который вместит всю сетку
-        const maxPixelWidth = Math.floor(containerWidth / this.gridSize);
-        const maxPixelHeight = Math.floor(containerHeight / this.gridSize);
+        const workspaceWidth = workspace.clientWidth - 40; // учитываем padding
+        const workspaceHeight = workspace.clientHeight - 40;
+        const containerWidth = canvasContainer.clientWidth - 40; // учитываем padding контейнера
         
-        // Берем минимальный размер, чтобы сетка влезла полностью
-        const pixelSize = Math.min(maxPixelWidth, maxPixelHeight);
+        // Вычисляем доступную ширину (берем минимальную из workspace и container)
+        const availableWidth = Math.min(workspaceWidth, containerWidth);
         
-        // Ограничиваем минимальный и максимальный размер
-        return Math.max(4, Math.min(30, pixelSize));
+        // Вычисляем размер пикселя на основе доступной ширины
+        let pixelSize = Math.floor(availableWidth / this.gridSize);
+        
+        // Для маленьких экранов делаем пиксели меньше
+        if (window.innerWidth <= 480) {
+            pixelSize = Math.max(8, pixelSize); // минимальный размер для мобильных
+        } else {
+            pixelSize = Math.max(12, pixelSize); // минимальный размер для десктопа
+        }
+        
+        // Максимальный размер пикселя
+        pixelSize = Math.min(30, pixelSize);
+        
+        console.log(`Available width: ${availableWidth}px, Grid: ${this.gridSize}, Pixel size: ${pixelSize}px`);
+        return pixelSize;
     }
     
-    // Остальные методы остаются без изменений...
+    setupResizeHandler() {
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (this.gridSize) {
+                    this.createGrid();
+                }
+            }, 250);
+        });
+    }
+    
     setupEventListeners() {
         const container = document.getElementById('canvas');
-        container.addEventListener('mousedown', (e) => this.startDrawing(e));
-        container.addEventListener('mousemove', (e) => this.draw(e));
-        container.addEventListener('touchstart', (e) => {
+        if (!container) return;
+        
+        // Удаляем старые обработчики
+        container.replaceWith(container.cloneNode(true));
+        const newContainer = document.getElementById('canvas');
+        
+        newContainer.addEventListener('mousedown', (e) => this.startDrawing(e));
+        newContainer.addEventListener('mousemove', (e) => this.draw(e));
+        newContainer.addEventListener('touchstart', (e) => {
             e.preventDefault();
             this.startDrawing(e);
         });
-        container.addEventListener('touchmove', (e) => {
+        newContainer.addEventListener('touchmove', (e) => {
             e.preventDefault();
             this.draw(e);
         });
@@ -175,7 +204,7 @@ class PixelArtEditor {
     }
     
     changeGridSize(newSize) {
-        this.gridSize = newSize;
+        this.gridSize = parseInt(newSize);
         this.createGrid();
         this.setupEventListeners();
     }
@@ -233,7 +262,7 @@ class PixelArtEditor {
                         this.canvas[index].element.style.backgroundColor = color;
                     }
                 });
-            }, 50);
+            }, 100);
         }
     }
     
@@ -271,4 +300,3 @@ class PixelArtEditor {
         return canvas.toDataURL();
     }
 }
-
