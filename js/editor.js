@@ -178,15 +178,16 @@ class PixelArtEditor {
         });
         
         const link = document.createElement('a');
-        link.download = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
+    link.download = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+    
+    if (window.telegramApp) {
+        window.telegramApp.showAlert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
+    } else {
+        alert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
+    }
         
-        if (window.telegramApp) {
-            window.telegramApp.showAlert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
-        } else {
-            alert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
-        }
     }
     
     getProjectData() {
@@ -247,3 +248,4 @@ class PixelArtEditor {
         return canvas.toDataURL();
     }
 }
+
