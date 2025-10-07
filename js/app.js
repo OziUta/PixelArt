@@ -124,9 +124,9 @@ class PixelArtApp {
     }
     
     initWorkspace() {
-        const workspace = document.getElementById('pixelArtApp');
-        
-        workspace.innerHTML = `
+    const workspace = document.getElementById('pixelArtApp');
+    
+    workspace.innerHTML = `
         <header class="toolbar">
             <div class="toolbar-row">
                 <button class="back-btn" onclick="app.returnToMenu()">← Назад</button>
@@ -169,19 +169,14 @@ class PixelArtApp {
             <button class="export-btn" onclick="app.exportArtwork()">Экспорт PNG</button>
         </footer>
     `;
-        
-        const sizeSelect = document.getElementById('gridSizeSelect');
-        if (sizeSelect) {
-            sizeSelect.value = this.selectedSize;
-        }
-        
-        this.editor = new PixelArtEditor(this.selectedSize);
-        
-        // Убираем показ кнопки "Сохранить в Telegram"
-        if (this.telegram.isInTelegram) {
-            this.telegram.tg.MainButton.hide();
-        }
+    
+    const sizeSelect = document.getElementById('gridSizeSelect');
+    if (sizeSelect) {
+        sizeSelect.value = this.selectedSize;
     }
+    
+    this.editor = new PixelArtEditor(this.selectedSize);
+}
     
     changeGridSize(newSize) {
         if (this.editor) {
@@ -306,4 +301,5 @@ function initSizeSelection() {
 
 // Инициализация при загрузке
 const sizeSelector = initSizeSelection();
+
 
