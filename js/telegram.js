@@ -64,20 +64,13 @@ class TelegramIntegration {
     }
 
     setupMainButton() {
-        this.tg.MainButton.setText('Сохранить в Telegram');
+        // Убираем настройку MainButton - она нам не нужна
         this.tg.MainButton.hide();
     }
 
     setupEventListeners() {
-        this.tg.MainButton.onClick(this.onMainButtonClick.bind(this));
+        // Убираем обработчик клика по MainButton
         this.tg.onEvent('viewportChanged', this.onViewportChanged.bind(this));
-    }
-
-    onMainButtonClick() {
-        if (window.app && window.app.editor) {
-            const projectData = window.app.editor.getProjectData();
-            this.sendDataToBot(projectData);
-        }
     }
 
     onViewportChanged() {
