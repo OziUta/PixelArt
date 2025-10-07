@@ -118,11 +118,32 @@
 </div>
 
     <!-- Рабочая область -->
-    <div id="workspace" class="screen">
-        <div class="pixel-art-app" id="pixelArtApp">
-            <!-- Динамически генерируется -->
+<div id="workspace" class="screen">
+    <div class="pixel-art-app" id="pixelArtApp">
+        <!-- Верхняя панель с крестиком -->
+        <div class="workspace-header">
+            <button class="close-btn" onclick="app.returnToMenu()">✕</button>
+        </div>
+        
+        <!-- Основная рабочая область -->
+        <div class="workspace-main">
+            <div class="canvas-container">
+                <div class="pixel-grid" id="pixelGrid"></div>
+            </div>
+        </div>
+        
+        <!-- Нижняя панель -->
+        <div class="workspace-footer">
+            <div class="tools-panel">
+                <div class="current-size">
+                    Размер: <span id="currentSize">16×16</span>
+                </div>
+                <button class="export-btn" onclick="app.exportImage()">Экспорт PNG</button>
+                <button class="save-btn telegram-only" onclick="app.saveToTelegram()">Сохранить в Telegram</button>
+            </div>
         </div>
     </div>
+</div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="js/telegram.js"></script>
@@ -130,4 +151,5 @@
     <script src="js/editor.js"></script>
 </body>
 </html>
+
 
