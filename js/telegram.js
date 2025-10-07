@@ -28,23 +28,12 @@ class TelegramIntegration {
         this.setupTheme();
         this.setupMainButton();
         this.setupEventListeners();
-        this.fixViewport();
         
         console.log('Telegram Web App ready. User:', this.user);
     }
 
     setupStandaloneApp() {
         console.log('Running in standalone mode');
-    }
-
-    fixViewport() {
-        this.adjustLayout();
-        
-        this.tg.onEvent('viewportChanged', this.adjustLayout.bind(this));
-        
-        setTimeout(() => {
-            this.adjustLayout();
-        }, 100);
     }
 
     setupTheme() {
@@ -93,17 +82,6 @@ class TelegramIntegration {
 
     onViewportChanged() {
         this.adjustLayout();
-    }
-
-    adjustLayout() {
-        const viewport = this.tg.viewportHeight;
-        if (viewport) {
-            document.documentElement.style.setProperty('--tg-viewport-height', `${viewport}px`);
-            
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.style.height = `${viewport}px`;
-            });
-        }
     }
 
     sendDataToBot(data) {
@@ -166,6 +144,13 @@ class TelegramIntegration {
         } else {
             const result = confirm(message);
             callback(result);
+        }
+    }
+
+    adjustLayout() {
+        const viewport = this.tg.viewportHeight;
+        if (viewport) {
+            document.documentElement.style.setProperty('--tg-viewport-height', `${viewport}px`);
         }
     }
 
