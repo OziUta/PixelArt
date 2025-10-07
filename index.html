@@ -38,22 +38,22 @@
             </div>
             
             <div class="menu-buttons">
-                <button class="menu-btn new-project" onclick="app.startNewProject()">
+                <button class="menu-btn new-project" data-action="new-project">
                     <span class="btn-icon">🎨</span>
                     Новый рисунок
                 </button>
                 
-                <button class="menu-btn load-project" onclick="app.loadProject()">
+                <button class="menu-btn load-project" data-action="load-project">
                     <span class="btn-icon">📁</span>
                     Загрузить проект
                 </button>
                 
-                <button class="menu-btn gallery" onclick="app.openGallery()">
+                <button class="menu-btn gallery" data-action="gallery">
                     <span class="btn-icon">🖼️</span>
                     Галерея
                 </button>
                 
-                <button class="menu-btn tutorial" onclick="app.showTutorial()">
+                <button class="menu-btn tutorial" data-action="tutorial">
                     <span class="btn-icon">❓</span>
                     Обучение
                 </button>
@@ -105,8 +105,8 @@
             </div>
             
             <div class="size-selection-buttons">
-                <button class="back-btn" onclick="app.returnToMenu()">Назад</button>
-                <button class="confirm-btn" onclick="app.confirmSizeSelection()">Продолжить</button>
+                <button class="back-btn" data-action="back-to-menu">Назад</button>
+                <button class="confirm-btn" data-action="confirm-size">Продолжить</button>
             </div>
         </div>
     </div>
