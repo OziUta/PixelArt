@@ -525,13 +525,13 @@ body {
     width: 100%;
 }
 
+/* Первая строка: кнопка назад слева + палитра цветов справа */
 .toolbar-row:first-child {
-    /* Первая строка: кнопка назад слева + палитра цветов занимает оставшееся пространство */
     align-items: center;
 }
 
+/* Вторая строка: инструменты слева + выбор размера справа */
 .toolbar-row:last-child {
-    /* Вторая строка: инструменты слева + выбор размера справа */
     align-items: center;
 }
 
@@ -554,7 +554,7 @@ body {
     transform: translateX(-3px);
 }
 
-/* Палитра цветов - занимает всё доступное пространство */
+/* Палитра цветов - занимает всё доступное пространство справа */
 .color-palette {
     display: flex;
     gap: 8px;
@@ -562,6 +562,24 @@ body {
     justify-content: flex-end;
     flex: 1;
     align-items: center;
+}
+
+.color {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.color.active {
+    border-color: white;
+    transform: scale(1.2);
+}
+
+.color:hover {
+    transform: scale(1.1);
 }
 
 /* Инструменты - фиксированные слева */
@@ -618,7 +636,7 @@ body {
     cursor: pointer;
 }
 
-/* Адаптивность для мобильных устройств */
+/* Адаптивность */
 @media (max-width: 768px) {
     .toolbar {
         padding: 12px;
@@ -631,7 +649,6 @@ body {
     
     .color-palette {
         gap: 6px;
-        justify-content: center;
     }
     
     .color {
@@ -662,34 +679,16 @@ body {
         gap: 10px;
     }
     
-    .toolbar-row:first-child {
-        /* На мобильных: кнопка назад сверху, палитра снизу */
-        flex-direction: column;
-    }
-    
-    .toolbar-row:last-child {
-        /* На мобильных: инструменты сверху, выбор размера снизу */
-        flex-direction: column;
-    }
-    
     .color-palette {
         justify-content: center;
-        order: 2;
-    }
-    
-    .back-btn {
-        order: 1;
-        align-self: center;
     }
     
     .tools {
         justify-content: center;
-        order: 1;
     }
     
     .size-selector {
         justify-content: center;
-        order: 2;
     }
     
     .tool {
@@ -922,4 +921,5 @@ body {
 .is-telegram .share-btn {
     display: none !important;
 }
+
 
