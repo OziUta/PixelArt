@@ -123,11 +123,12 @@
         <!-- Верхняя панель с крестиком -->
         <div class="workspace-header">
             <button class="close-btn" onclick="app.returnToMenu()">✕</button>
+            <div class="workspace-title">Pixel Art</div>
         </div>
         
         <!-- Основная рабочая область -->
         <div class="workspace-main">
-            <div class="canvas-container">
+            <div class="canvas-wrapper">
                 <div class="pixel-grid" id="pixelGrid"></div>
             </div>
         </div>
@@ -138,8 +139,10 @@
                 <div class="current-size">
                     Размер: <span id="currentSize">16×16</span>
                 </div>
-                <button class="export-btn" onclick="app.exportImage()">Экспорт PNG</button>
-                <button class="save-btn telegram-only" onclick="app.saveToTelegram()">Сохранить в Telegram</button>
+                <div class="footer-buttons">
+                    <button class="export-btn" onclick="app.exportImage()">Экспорт PNG</button>
+                    <button class="save-btn telegram-only" onclick="app.saveToTelegram()">Сохранить в Telegram</button>
+                </div>
             </div>
         </div>
     </div>
@@ -151,5 +154,6 @@
     <script src="js/editor.js"></script>
 </body>
 </html>
+
 
 
