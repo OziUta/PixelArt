@@ -636,7 +636,7 @@ body {
     cursor: pointer;
 }
 
-/* Адаптивность */
+/* Адаптивность для планшетов */
 @media (max-width: 768px) {
     .toolbar {
         padding: 12px;
@@ -649,6 +649,7 @@ body {
     
     .color-palette {
         gap: 6px;
+        justify-content: center;
     }
     
     .color {
@@ -665,30 +666,162 @@ body {
         height: 40px;
         font-size: 1.1rem;
     }
+    
+    .size-selector {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+    
+    .size-selector select {
+        padding: 4px 8px;
+        font-size: 0.9rem;
+    }
 }
 
+/* Адаптивность для мобильных телефонов */
 @media (max-width: 480px) {
     .toolbar {
         padding: 10px;
-        gap: 10px;
+        gap: 12px;
     }
     
     .toolbar-row {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+    }
+    
+    /* Первая строка на мобильных: кнопка назад сверху, палитра снизу */
+    .toolbar-row:first-child {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .back-btn {
+        order: 1;
+        width: 100%;
+        max-width: 200px;
+        padding: 12px;
+        font-size: 1rem;
+    }
+    
+    .color-palette {
+        order: 2;
+        justify-content: center;
+        width: 100%;
+        gap: 8px;
+    }
+    
+    .color {
+        width: 32px;
+        height: 32px;
+    }
+    
+    /* Вторая строка на мобильных: инструменты сверху, выбор размера снизу */
+    .toolbar-row:last-child {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .tools {
+        order: 1;
+        justify-content: center;
+        width: 100%;
+        gap: 12px;
+    }
+    
+    .tool {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+    }
+    
+    .size-selector {
+        order: 2;
+        justify-content: center;
+        width: 100%;
+        max-width: 200px;
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+    
+    .size-selector select {
+        padding: 6px 10px;
+        font-size: 1rem;
+    }
+}
+
+/* Адаптивность для очень маленьких экранов */
+@media (max-width: 360px) {
+    .toolbar {
+        padding: 8px;
+        gap: 10px;
+    }
+    
+    .toolbar-row {
         gap: 10px;
     }
     
     .color-palette {
+        gap: 6px;
+    }
+    
+    .color {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .tools {
+        gap: 8px;
+    }
+    
+    .tool {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+    
+    .back-btn {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .size-selector {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Ландшафтная ориентация на мобильных */
+@media (max-height: 500px) and (orientation: landscape) {
+    .toolbar {
+        padding: 8px 15px;
+        gap: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .toolbar-row {
+        flex: 1;
+        min-width: 45%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .color-palette {
         justify-content: center;
+        gap: 4px;
+    }
+    
+    .color {
+        width: 25px;
+        height: 25px;
     }
     
     .tools {
         justify-content: center;
-    }
-    
-    .size-selector {
-        justify-content: center;
+        gap: 6px;
     }
     
     .tool {
@@ -697,9 +830,9 @@ body {
         font-size: 1rem;
     }
     
-    .color {
-        width: 25px;
-        height: 25px;
+    .size-selector {
+        font-size: 0.8rem;
+        padding: 5px 10px;
     }
 }
 
@@ -921,5 +1054,6 @@ body {
 .is-telegram .share-btn {
     display: none !important;
 }
+
 
 
