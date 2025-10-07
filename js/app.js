@@ -19,6 +19,8 @@ class PixelArtApp {
         
         if (this.telegram.isInTelegram) {
             document.body.classList.add('is-telegram');
+            // Устанавливаем обработчик кнопки назад
+            this.telegram.setBackButtonCallback(() => this.handleBackButton());
         }
         
         const loadTime = this.telegram.isInTelegram ? 1500 : 2500;
@@ -28,6 +30,33 @@ class PixelArtApp {
         
         this.initMainMenu();
         this.initSizeSelection();
+    }
+
+    // Обработчик кнопки "Назад"
+    handleBackButton() {
+        switch (this.currentScreen) {
+            case 'menu':
+                // В главном меню - закрываем приложение
+                if (this.telegram.isInTelegram) {
+                    this.telegram.tg.close();
+                }
+                break;
+                
+            case 'sizeSelection':
+                // В выборе размера - возвращаемся в меню
+                this.returnToMenu();
+                break;
+                
+            case 'workspace':
+                // В рабочей области - возвращаемся в меню
+                this.returnToMenu();
+                break;
+                
+            default:
+                if (this.telegram.isInTelegram) {
+                    this.telegram.tg.close();
+                }
+        }
     }
     
     switchScreen(targetScreen) {
@@ -49,7 +78,28 @@ class PixelArtApp {
                 }, 50);
                 
                 this.currentScreen = targetScreen;
+                
+                // Обновляем видимость кнопки "Назад" при смене экрана
+                this.updateBackButtonVisibility();
             }, 300);
+        }
+    }
+
+    // Обновляем видимость кнопки "Назад"
+    updateBackButtonVisibility() {
+        if (!this.telegram.isInTelegram) return;
+        
+        switch (this.currentScreen) {
+            case 'menu':
+                // В главном меню скрываем кнопку (будет крестик)
+                this.telegram.hideBackButton();
+                break;
+                
+            case 'sizeSelection':
+            case 'workspace':
+                // В других экранах показываем кнопку "Назад"
+                this.telegram.showBackButton();
+                break;
         }
     }
     
@@ -126,6 +176,7 @@ class PixelArtApp {
     initWorkspace() {
         const workspace = document.getElementById('pixelArtApp');
         
+        // УБИРАЕМ кнопку "Назад" из HTML, так как теперь используем системную
         workspace.innerHTML = `
             <header class="toolbar">
                 <div class="toolbar-center">
@@ -169,17 +220,15 @@ class PixelArtApp {
             </footer>
         `;
         
+        // Обновляем видимость кнопки "Назад" при входе в рабочую область
+        this.updateBackButtonVisibility();
+        
         const sizeSelect = document.getElementById('gridSizeSelect');
         if (sizeSelect) {
             sizeSelect.value = this.selectedSize;
         }
         
         this.editor = new PixelArtEditor(this.selectedSize);
-        
-        // Убираем показ кнопки "Сохранить в Telegram"
-        if (this.telegram.isInTelegram) {
-            this.telegram.tg.MainButton.hide();
-        }
     }
     
     changeGridSize(newSize) {
@@ -195,10 +244,6 @@ class PixelArtApp {
     returnToMenu() {
         if (this.editor) {
             this.saveCurrentProject();
-        }
-        
-        if (this.telegram.isInTelegram) {
-            this.telegram.tg.MainButton.hide();
         }
         
         this.switchScreen('menu');
@@ -305,4 +350,3 @@ function initSizeSelection() {
 
 // Инициализация при загрузке
 const sizeSelector = initSizeSelection();
-
