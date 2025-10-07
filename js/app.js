@@ -127,7 +127,7 @@ class PixelArtApp {
     const workspace = document.getElementById('pixelArtApp');
     
     workspace.innerHTML = `
-        <header class="toolbar">
+        <header class="toolbar" id="mainToolbar">
             <div class="toolbar-row">
                 <button class="back-btn" onclick="app.returnToMenu()">← Назад</button>
                 <div class="color-palette">
@@ -169,6 +169,13 @@ class PixelArtApp {
             <button class="export-btn" onclick="app.exportArtwork()">Экспорт PNG</button>
         </footer>
     `;
+
+        // Принудительное применение стилей для Telegram
+    if (this.telegram.isInTelegram) {
+        setTimeout(() => {
+            this.forceMobileLayout();
+        }, 100);
+    }
     
     const sizeSelect = document.getElementById('gridSizeSelect');
     if (sizeSelect) {
@@ -177,7 +184,69 @@ class PixelArtApp {
     
     this.editor = new PixelArtEditor(this.selectedSize);
 }
-    
+   // Добавьте этот метод в класс PixelArtApp
+forceMobileLayout() {
+    const toolbar = document.getElementById('mainToolbar');
+    if (toolbar) {
+        toolbar.style.cssText = `
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 15px !important;
+        `;
+        
+        const rows = toolbar.querySelectorAll('.toolbar-row');
+        rows.forEach(row => {
+            row.style.cssText = `
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+                width: 100% !important;
+                align-items: center !important;
+            `;
+        });
+        
+        const backBtn = toolbar.querySelector('.back-btn');
+        if (backBtn) {
+            backBtn.style.cssText = `
+                width: 100% !important;
+                max-width: 100% !important;
+                order: 1 !important;
+            `;
+        }
+        
+        const colorPalette = toolbar.querySelector('.color-palette');
+        if (colorPalette) {
+            colorPalette.style.cssText = `
+                display: flex !important;
+                justify-content: center !important;
+                width: 100% !important;
+                order: 2 !important;
+                gap: 8px !important;
+            `;
+        }
+        
+        const tools = toolbar.querySelector('.tools');
+        if (tools) {
+            tools.style.cssText = `
+                display: flex !important;
+                justify-content: center !important;
+                width: 100% !important;
+                order: 1 !important;
+                gap: 12px !important;
+            `;
+        }
+        
+        const sizeSelector = toolbar.querySelector('.size-selector');
+        if (sizeSelector) {
+            sizeSelector.style.cssText = `
+                display: flex !important;
+                justify-content: center !important;
+                width: 100% !important;
+                order: 2 !important;
+            `;
+        }
+    }
+} 
     changeGridSize(newSize) {
         if (this.editor) {
             this.editor.changeGridSize(parseInt(newSize));
@@ -301,6 +370,7 @@ function initSizeSelection() {
 
 // Инициализация при загрузке
 const sizeSelector = initSizeSelection();
+
 
 
 
