@@ -15,27 +15,31 @@ class PixelArtEditor {
     
     createGrid() {
         const container = document.getElementById('canvas');
+        const pixelSize = this.calculatePixelSize();
         
-        // Устанавливаем data-size атрибут для CSS
-        container.setAttribute('data-size', this.gridSize);
         container.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
         container.innerHTML = '';
         
-        // Очищаем старый canvas
         this.canvas = [];
         
         for (let i = 0; i < this.gridSize * this.gridSize; i++) {
             const pixel = document.createElement('div');
             pixel.className = 'pixel';
             pixel.dataset.index = i;
+            pixel.style.width = `${pixelSize}px`;
+            pixel.style.height = `${pixelSize}px`;
             
             container.appendChild(pixel);
             this.canvas.push({ element: pixel, color: null });
         }
     }
     
+    calculatePixelSize() {
+        const maxSize = window.telegramApp?.isInTelegram ? 600 : 800;
+        return Math.max(4, Math.min(20, Math.floor(maxSize / this.gridSize)));
+    }
+    
     setupEventListeners() {
-        // Обработчики для пикселей
         const container = document.getElementById('canvas');
         container.addEventListener('mousedown', (e) => this.startDrawing(e));
         container.addEventListener('mousemove', (e) => this.draw(e));
@@ -51,7 +55,6 @@ class PixelArtEditor {
         document.addEventListener('mouseup', () => this.stopDrawing());
         document.addEventListener('touchend', () => this.stopDrawing());
         
-        // Обработчики для инструментов
         const tools = document.querySelectorAll('.tool');
         tools.forEach(tool => {
             tool.addEventListener('click', (e) => {
@@ -61,7 +64,6 @@ class PixelArtEditor {
             });
         });
         
-        // Обработчики для цветов
         const colors = document.querySelectorAll('.color');
         colors.forEach(color => {
             color.addEventListener('click', (e) => {
@@ -133,7 +135,6 @@ class PixelArtEditor {
                 this.canvas[index].color = this.currentColor;
                 this.canvas[index].element.style.backgroundColor = this.currentColor;
                 
-                // Добавляем соседей
                 const x = index % this.gridSize;
                 const y = Math.floor(index / this.gridSize);
                 
@@ -163,7 +164,6 @@ class PixelArtEditor {
         canvas.width = this.gridSize * scale;
         canvas.height = this.gridSize * scale;
         
-        // Отрисовка пикселей
         this.canvas.forEach((pixelData, index) => {
             const x = (index % this.gridSize) * scale;
             const y = Math.floor(index / this.gridSize) * scale;
@@ -177,7 +177,6 @@ class PixelArtEditor {
             ctx.fillRect(x, y, scale, scale);
         });
         
-        // Создание ссылки для скачивания
         const link = document.createElement('a');
         link.download = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
         link.href = canvas.toDataURL();
@@ -199,12 +198,10 @@ class PixelArtEditor {
     
     loadProject(data) {
         if (data && data.pixels) {
-            // Если размер сетки отличается, меняем его
             if (data.gridSize && data.gridSize !== this.gridSize) {
                 this.changeGridSize(data.gridSize);
             }
             
-            // Ждем обновления DOM
             setTimeout(() => {
                 data.pixels.forEach((color, index) => {
                     if (index < this.canvas.length) {
