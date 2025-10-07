@@ -11,10 +11,10 @@ class PixelArtApp {
         this.selectedSize = 16;
         this.editor = null;
         this.telegram = telegramApp;
-        this.init();
     }
     
     init() {
+        // Инициализируем Telegram интеграцию
         this.telegram.init();
         
         if (this.telegram.isInTelegram) {
@@ -23,7 +23,7 @@ class PixelArtApp {
             this.telegram.setBackButtonCallback(() => this.handleBackButton());
         }
         
-        const loadTime = this.telegram.isInTelegram ? 1500 : 2500;
+        const loadTime = this.telegram.isInTelegram ? 1500 : 1000;
         setTimeout(() => {
             this.switchScreen('menu');
         }, loadTime);
@@ -125,6 +125,8 @@ class PixelArtApp {
     
     loadRecentProjects() {
         const thumbnailsContainer = document.getElementById('recentProjects');
+        if (!thumbnailsContainer) return;
+        
         const recentProjects = JSON.parse(localStorage.getItem('recentProjects') || '[]');
         
         thumbnailsContainer.innerHTML = '';
@@ -174,80 +176,70 @@ class PixelArtApp {
     }
     
     initWorkspace() {
-    const workspace = document.getElementById('pixelArtApp');
-    
-    workspace.innerHTML = `
-        <header class="toolbar">
-            <div class="toolbar-center">
-                <div class="tools">
-                    <button class="tool active" data-tool="brush" title="Кисть">🖌️</button>
-                    <button class="tool" data-tool="eraser" title="Ластик">🧹</button>
-                    <button class="tool" data-tool="fill" title="Заливка">🎨</button>
+        const workspace = document.getElementById('pixelArtApp');
+        if (!workspace) return;
+        
+        // УБИРАЕМ кнопку "Назад" из HTML, так как теперь используем системную
+        workspace.innerHTML = `
+            <header class="toolbar">
+                <div class="toolbar-center">
+                    <div class="tools">
+                        <button class="tool active" data-tool="brush" title="Кисть">🖌️</button>
+                        <button class="tool" data-tool="eraser" title="Ластик">🧹</button>
+                        <button class="tool" data-tool="fill" title="Заливка">🎨</button>
+                    </div>
+                    <div class="color-palette">
+                        <div class="color active" style="background: #ff0000" data-color="#ff0000" title="Красный"></div>
+                        <div class="color" style="background: #00ff00" data-color="#00ff00" title="Зеленый"></div>
+                        <div class="color" style="background: #0000ff" data-color="#0000ff" title="Синий"></div>
+                        <div class="color" style="background: #ffff00" data-color="#ffff00" title="Желтый"></div>
+                        <div class="color" style="background: #ff00ff" data-color="#ff00ff" title="Пурпурный"></div>
+                        <div class="color" style="background: #00ffff" data-color="#00ffff" title="Голубой"></div>
+                        <div class="color" style="background: #ffffff" data-color="#ffffff" title="Белый"></div>
+                        <div class="color" style="background: #000000" data-color="#000000" title="Черный"></div>
+                    </div>
                 </div>
-                <div class="color-palette">
-                    <div class="color active" style="background: #ff0000" data-color="#ff0000" title="Красный"></div>
-                    <div class="color" style="background: #00ff00" data-color="#00ff00" title="Зеленый"></div>
-                    <div class="color" style="background: #0000ff" data-color="#0000ff" title="Синий"></div>
-                    <div class="color" style="background: #ffff00" data-color="#ffff00" title="Желтый"></div>
-                    <div class="color" style="background: #ff00ff" data-color="#ff00ff" title="Пурпурный"></div>
-                    <div class="color" style="background: #00ffff" data-color="#00ffff" title="Голубой"></div>
-                    <div class="color" style="background: #ffffff" data-color="#ffffff" title="Белый"></div>
-                    <div class="color" style="background: #000000" data-color="#000000" title="Черный"></div>
+                <div class="toolbar-right">
+                    <div class="size-selector">
+                        <span>Размер:</span>
+                        <select id="gridSizeSelect">
+                            <option value="8">8x8</option>
+                            <option value="16" selected>16x16</option>
+                            <option value="32">32x32</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="toolbar-right">
-                <div class="size-selector">
-                    <span>Размер:</span>
-                    <select id="gridSizeSelect" onchange="app.changeGridSize(this.value)">
-                        <option value="8">8x8</option>
-                        <option value="16" selected>16x16</option>
-                        <option value="32">32x32</option>
-                    </select>
+            </header>
+            
+            <main class="workspace">
+                <div class="canvas-container">
+                    <div class="pixel-grid" id="canvas"></div>
                 </div>
-            </div>
-        </header>
+            </main>
+            
+            <footer class="status-bar">
+                <span>Размер: ${this.selectedSize}x${this.selectedSize}</span>
+                <button class="export-btn">Экспорт PNG</button>
+            </footer>
+        `;
         
-        <main class="workspace">
-            <div class="canvas-container">
-                <div class="pixel-grid" id="canvas"></div>
-            </div>
-        </main>
-        
-        <footer class="status-bar">
-            <span>Размер: ${this.selectedSize}x${this.selectedSize}</span>
-            <button class="export-btn" onclick="app.exportArtwork()">Экспорт PNG</button>
-        </footer>
-    `;
-    
-    // Добавляем небольшую задержку для инициализации редактора
-    setTimeout(() => {
-        const sizeSelect = document.getElementById('gridSizeSelect');
-        if (sizeSelect) {
-            sizeSelect.value = this.selectedSize;
-        }
-        
-        this.editor = new PixelArtEditor(this.selectedSize);
-        
-        // Принудительно обновляем сетку после полной загрузки DOM
+        // Настраиваем обработчики после создания DOM
         setTimeout(() => {
-            if (this.editor) {
-                this.editor.createGrid();
+            const sizeSelect = document.getElementById('gridSizeSelect');
+            if (sizeSelect) {
+                sizeSelect.value = this.selectedSize;
+                sizeSelect.onchange = (e) => this.changeGridSize(e.target.value);
             }
+            
+            const exportBtn = document.querySelector('.export-btn');
+            if (exportBtn) {
+                exportBtn.onclick = () => this.exportArtwork();
+            }
+            
+            this.editor = new PixelArtEditor(this.selectedSize);
         }, 100);
-    }, 50);
-    
-    this.updateBackButtonVisibility();
-}
         
-        // Обновляем видимость кнопки "Назад" при входе в рабочую область
         this.updateBackButtonVisibility();
-        
-        const sizeSelect = document.getElementById('gridSizeSelect');
-        if (sizeSelect) {
-            sizeSelect.value = this.selectedSize;
-        }
-        
-        this.editor = new PixelArtEditor(this.selectedSize);
     }
     
     changeGridSize(newSize) {
@@ -309,7 +301,7 @@ class PixelArtApp {
             if (this.editor && project.data) {
                 setTimeout(() => {
                     this.editor.loadProject(project.data);
-                }, 100);
+                }, 200);
             }
         }, 500);
     }
@@ -336,37 +328,9 @@ class PixelArtApp {
     }
 }
 
+// Инициализация приложения
 let app;
 document.addEventListener('DOMContentLoaded', () => {
     app = new PixelArtApp();
+    app.init();
 });
-
-function initSizeSelection() {
-    const sizeOptions = document.querySelectorAll('.size-option');
-    let selectedSize = 16; // размер по умолчанию
-    
-    sizeOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            // Убираем активный класс у всех опций
-            sizeOptions.forEach(opt => opt.classList.remove('active'));
-            // Добавляем активный класс к выбранной опции
-            this.classList.add('active');
-            // Сохраняем выбранный размер
-            selectedSize = parseInt(this.getAttribute('data-size'));
-        });
-    });
-    
-    // Активируем размер по умолчанию (16x16)
-    const defaultOption = document.querySelector('.size-option[data-size="16"]');
-    if (defaultOption) {
-        defaultOption.classList.add('active');
-    }
-    
-    return {
-        getSelectedSize: () => selectedSize
-    };
-}
-
-// Инициализация при загрузке
-const sizeSelector = initSizeSelection();
-
