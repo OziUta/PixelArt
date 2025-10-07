@@ -1028,4 +1028,57 @@ body {
 .is-telegram .share-btn {
     display: none !important;
 }
+/* Дополнительные стили для точного позиционирования */
+.toolbar-row.first-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toolbar-row.second-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Гарантируем, что на мобильных строка остаётся горизонтальной */
+@media (max-width: 480px) {
+    .toolbar-row.first-row,
+    .toolbar-row.second-row {
+        flex-direction: row !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    
+    .first-row .back-btn {
+        flex-shrink: 0;
+        margin-right: 10px;
+    }
+    
+    .first-row .color-palette {
+        flex: 1;
+        justify-content: flex-end;
+    }
+    
+    .second-row .tools {
+        flex: 1;
+        justify-content: flex-start;
+    }
+    
+    .second-row .size-selector {
+        flex-shrink: 0;
+        margin-left: 10px;
+    }
+}
+
+/* Форсированное переопределение для Telegram */
+.is-telegram .toolbar-row.first-row,
+.is-telegram .toolbar-row.second-row {
+    flex-direction: row !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
 
