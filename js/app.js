@@ -128,7 +128,7 @@ class PixelArtApp {
     
     workspace.innerHTML = `
         <header class="toolbar" id="mainToolbar">
-            <div class="toolbar-row">
+            <div class="toolbar-row first-row">
                 <button class="back-btn" onclick="app.returnToMenu()">← Назад</button>
                 <div class="color-palette">
                     <div class="color active" style="background: #ff0000" data-color="#ff0000" title="Красный"></div>
@@ -141,7 +141,7 @@ class PixelArtApp {
                     <div class="color" style="background: #000000" data-color="#000000" title="Черный"></div>
                 </div>
             </div>
-            <div class="toolbar-row">
+            <div class="toolbar-row second-row">
                 <div class="tools">
                     <button class="tool active" data-tool="brush" title="Кисть">🖌️</button>
                     <button class="tool" data-tool="eraser" title="Ластик">🧹</button>
@@ -169,13 +169,6 @@ class PixelArtApp {
             <button class="export-btn" onclick="app.exportArtwork()">Экспорт PNG</button>
         </footer>
     `;
-
-        // Принудительное применение стилей для Telegram
-    if (this.telegram.isInTelegram) {
-        setTimeout(() => {
-            this.forceMobileLayout();
-        }, 100);
-    }
     
     const sizeSelect = document.getElementById('gridSizeSelect');
     if (sizeSelect) {
@@ -370,6 +363,7 @@ function initSizeSelection() {
 
 // Инициализация при загрузке
 const sizeSelector = initSizeSelection();
+
 
 
 
