@@ -1,6 +1,7 @@
 class PixelArtEditor {
     constructor(gridSize = 16) {
-         this.gridSize = gridSize === 32 ? 16 : gridSize; // Если передали 32, меняем на 16
+        // Ограничиваем возможные размеры сетки
+        this.gridSize = gridSize === 32 ? 16 : gridSize;
         this.currentColor = '#ff0000';
         this.currentTool = 'brush';
         this.isDrawing = false;
@@ -188,6 +189,15 @@ class PixelArtEditor {
             ctx.fillRect(x, y, scale, scale);
         });
         
+        // Всегда используем улучшенное скачивание для Telegram
+        if (window.telegramApp && window.telegramApp.isInTelegram) {
+            this.downloadInTelegram(canvas);
+        } else {
+            this.downloadInBrowser(canvas);
+        }
+    }
+    
+    downloadInBrowser(canvas) {
         const link = document.createElement('a');
         link.download = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
         link.href = canvas.toDataURL();
@@ -197,6 +207,56 @@ class PixelArtEditor {
             window.telegramApp.showAlert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
         } else {
             alert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
+        }
+    }
+    
+    // Улучшенное скачивание для Telegram
+    downloadInTelegram(canvas) {
+        const imageDataUrl = canvas.toDataURL('image/png');
+        const filename = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
+        
+        // Создаем временную ссылку для скачивания
+        const downloadLink = document.createElement('a');
+        downloadLink.href = imageDataUrl;
+        downloadLink.download = filename;
+        downloadLink.style.display = 'none';
+        
+        // Добавляем ссылку в DOM
+        document.body.appendChild(downloadLink);
+        
+        // Показываем подробную инструкцию
+        if (window.telegramApp) {
+            window.telegramApp.showAlert(
+                `📸 Ваш рисунок ${this.gridSize}x${this.gridSize} готов!\n\n` +
+                'Инструкция по сохранению:\n\n' +
+                '1. Нажмите ОК в этом окне\n' +
+                '2. Появится ссылка для скачивания\n' +
+                '3. Нажмите и удерживайте ссылку\n' +
+                '4. Выберите "Скачать" или "Сохранить изображение"\n\n' +
+                'После сохранения изображение будет в вашей галерее! 📱'
+            );
+            
+            // Автоматически нажимаем на ссылку после закрытия alert
+            setTimeout(() => {
+                downloadLink.click();
+                
+                // Показываем финальное сообщение
+                setTimeout(() => {
+                    window.telegramApp.showAlert(
+                        '✅ Отлично! Если изображение не сохранилось:\n\n' +
+                        '• Проверьте уведомления\n' +
+                        '• Или попробуйте нажать на ссылку еще раз\n' +
+                        '• Изображение сохранится в галерею телефона'
+                    );
+                    
+                    // Убираем ссылку через некоторое время
+                    setTimeout(() => {
+                        if (document.body.contains(downloadLink)) {
+                            document.body.removeChild(downloadLink);
+                        }
+                    }, 10000);
+                }, 1000);
+            }, 1500);
         }
     }
     
@@ -260,4 +320,3 @@ class PixelArtEditor {
         return canvas.toDataURL();
     }
 }
-
