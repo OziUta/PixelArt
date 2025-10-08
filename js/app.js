@@ -216,6 +216,9 @@ class PixelArtApp {
             return;
         }
         
+        // Определяем текст кнопки в зависимости от контекста
+        const exportButtonText = this.telegram.isInTelegram ? 'Отправить боту' : 'Экспорт PNG';
+        
         workspace.innerHTML = `
             <header class="toolbar">
                 <div class="toolbar-center">
@@ -233,6 +236,10 @@ class PixelArtApp {
                         <div class="color" style="background: #00ffff" data-color="#00ffff" title="Голубой"></div>
                         <div class="color" style="background: #ffffff" data-color="#ffffff" title="Белый"></div>
                         <div class="color" style="background: #000000" data-color="#000000" title="Черный"></div>
+                        <!-- Новые цвета -->
+                        <div class="color" style="background: #ffa500" data-color="#ffa500" title="Оранжевый"></div>
+                        <div class="color" style="background: #800080" data-color="#800080" title="Фиолетовый"></div>
+                        <div class="color" style="background: #ff69b4" data-color="#ff69b4" title="Розовый"></div>
                     </div>
                 </div>
                 <div class="toolbar-right">
@@ -254,7 +261,7 @@ class PixelArtApp {
             
             <footer class="status-bar">
                 <span>Размер: ${this.selectedSize}x${this.selectedSize}</span>
-                <button class="export-btn">Экспорт PNG</button>
+                <button class="export-btn">${exportButtonText}</button>
             </footer>
         `;
         
