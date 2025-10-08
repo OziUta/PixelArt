@@ -209,62 +209,62 @@ class PixelArtApp {
     
     initWorkspace() {
         console.log('Initializing workspace...');
-        
-        const workspace = document.getElementById('pixelArtApp');
-        if (!workspace) {
-            console.error('Workspace container not found');
-            return;
-        }
-        
-        // Определяем текст кнопки в зависимости от контекста
-        const exportButtonText = this.telegram.isInTelegram ? 'Отправить боту' : 'Экспорт PNG';
-        
-        workspace.innerHTML = `
-            <header class="toolbar">
-                <div class="toolbar-center">
-                    <div class="tools">
-                        <button class="tool active" data-tool="brush" title="Кисть">🖌️</button>
-                        <button class="tool" data-tool="eraser" title="Ластик">🧹</button>
-                        <button class="tool" data-tool="fill" title="Заливка">🎨</button>
-                    </div>
-                    <div class="color-palette">
-                        <div class="color active" style="background: #ff0000" data-color="#ff0000" title="Красный"></div>
-                        <div class="color" style="background: #00ff00" data-color="#00ff00" title="Зеленый"></div>
-                        <div class="color" style="background: #0000ff" data-color="#0000ff" title="Синий"></div>
-                        <div class="color" style="background: #ffff00" data-color="#ffff00" title="Желтый"></div>
-                        <div class="color" style="background: #ff00ff" data-color="#ff00ff" title="Пурпурный"></div>
-                        <div class="color" style="background: #00ffff" data-color="#00ffff" title="Голубой"></div>
-                        <div class="color" style="background: #ffffff" data-color="#ffffff" title="Белый"></div>
-                        <div class="color" style="background: #000000" data-color="#000000" title="Черный"></div>
-                        <!-- Новые цвета -->
-                        <div class="color" style="background: #ffa500" data-color="#ffa500" title="Оранжевый"></div>
-                        <div class="color" style="background: #800080" data-color="#800080" title="Фиолетовый"></div>
-                        <div class="color" style="background: #ff69b4" data-color="#ff69b4" title="Розовый"></div>
-                    </div>
+    
+    const workspace = document.getElementById('pixelArtApp');
+    if (!workspace) {
+        console.error('Workspace container not found');
+        return;
+    }
+    
+    // Всегда показываем "Скачать PNG" для простоты
+    const exportButtonText = 'Скачать PNG';
+    
+    workspace.innerHTML = `
+        <header class="toolbar">
+            <div class="toolbar-center">
+                <div class="tools">
+                    <button class="tool active" data-tool="brush" title="Кисть">🖌️</button>
+                    <button class="tool" data-tool="eraser" title="Ластик">🧹</button>
+                    <button class="tool" data-tool="fill" title="Заливка">🎨</button>
                 </div>
-                <div class="toolbar-right">
-                    <div class="size-selector">
-                        <span>Размер:</span>
-                        <select id="gridSizeSelect">
-                            <option value="8">8x8</option>
-                            <option value="16" selected>16x16</option>
-                        </select>
-                    </div>
+                <div class="color-palette">
+                    <div class="color active" style="background: #ff0000" data-color="#ff0000" title="Красный"></div>
+                    <div class="color" style="background: #00ff00" data-color="#00ff00" title="Зеленый"></div>
+                    <div class="color" style="background: #0000ff" data-color="#0000ff" title="Синий"></div>
+                    <div class="color" style="background: #ffff00" data-color="#ffff00" title="Желтый"></div>
+                    <div class="color" style="background: #ff00ff" data-color="#ff00ff" title="Пурпурный"></div>
+                    <div class="color" style="background: #00ffff" data-color="#00ffff" title="Голубой"></div>
+                    <div class="color" style="background: #ffffff" data-color="#ffffff" title="Белый"></div>
+                    <div class="color" style="background: #000000" data-color="#000000" title="Черный"></div>
+                    <!-- Новые цвета -->
+                    <div class="color" style="background: #ffa500" data-color="#ffa500" title="Оранжевый"></div>
+                    <div class="color" style="background: #800080" data-color="#800080" title="Фиолетовый"></div>
+                    <div class="color" style="background: #ff69b4" data-color="#ff69b4" title="Розовый"></div>
                 </div>
-            </header>
-            
-            <main class="workspace">
-                <div class="canvas-container">
-                    <div class="pixel-grid" id="canvas"></div>
+            </div>
+            <div class="toolbar-right">
+                <div class="size-selector">
+                    <span>Размер:</span>
+                    <select id="gridSizeSelect">
+                        <option value="8">8x8</option>
+                        <option value="16" selected>16x16</option>
+                    </select>
                 </div>
-            </main>
-            
-            <footer class="status-bar">
-                <span>Размер: ${this.selectedSize}x${this.selectedSize}</span>
-                <button class="export-btn">${exportButtonText}</button>
-            </footer>
-        `;
+            </div>
+        </header>
         
+        <main class="workspace">
+            <div class="canvas-container">
+                <div class="pixel-grid" id="canvas"></div>
+            </div>
+        </main>
+        
+        <footer class="status-bar">
+            <span>Размер: ${this.selectedSize}x${this.selectedSize}</span>
+            <button class="export-btn">${exportButtonText}</button>
+        </footer>
+    `;
+    
         // Настраиваем обработчики после создания DOM
         setTimeout(() => {
             const sizeSelect = document.getElementById('gridSizeSelect');
@@ -396,3 +396,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
     });
 });
+
