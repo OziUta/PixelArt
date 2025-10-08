@@ -189,75 +189,126 @@ class PixelArtEditor {
             ctx.fillRect(x, y, scale, scale);
         });
         
-        // Всегда используем улучшенное скачивание для Telegram
-        if (window.telegramApp && window.telegramApp.isInTelegram) {
-            this.downloadInTelegram(canvas);
-        } else {
-            this.downloadInBrowser(canvas);
-        }
+        // Всегда используем улучшенное скачивание
+        this.enhancedDownload(canvas);
     }
     
-    downloadInBrowser(canvas) {
-        const link = document.createElement('a');
-        link.download = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-        
-        if (window.telegramApp) {
-            window.telegramApp.showAlert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
-        } else {
-            alert(`Рисунок ${this.gridSize}x${this.gridSize} экспортирован как PNG! 🎉`);
-        }
-    }
-    
-    // Улучшенное скачивание для Telegram
-    downloadInTelegram(canvas) {
+    enhancedDownload(canvas) {
         const imageDataUrl = canvas.toDataURL('image/png');
         const filename = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
         
-        // Создаем временную ссылку для скачивания
+        // Создаем видимую ссылку для скачивания
         const downloadLink = document.createElement('a');
         downloadLink.href = imageDataUrl;
         downloadLink.download = filename;
-        downloadLink.style.display = 'none';
+        downloadLink.textContent = 'Скачать PNG файл';
+        downloadLink.style.cssText = `
+            display: block;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #27ae60;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            min-width: 200px;
+        `;
         
-        // Добавляем ссылку в DOM
-        document.body.appendChild(downloadLink);
+        // Создаем overlay
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        `;
         
-        // Показываем подробную инструкцию
-        if (window.telegramApp) {
-            window.telegramApp.showAlert(
-                `📸 Ваш рисунок ${this.gridSize}x${this.gridSize} готов!\n\n` +
-                'Инструкция по сохранению:\n\n' +
-                '1. Нажмите ОК в этом окне\n' +
-                '2. Появится ссылка для скачивания\n' +
-                '3. Нажмите и удерживайте ссылку\n' +
-                '4. Выберите "Скачать" или "Сохранить изображение"\n\n' +
-                'После сохранения изображение будет в вашей галерее! 📱'
-            );
-            
-            // Автоматически нажимаем на ссылку после закрытия alert
-            setTimeout(() => {
-                downloadLink.click();
-                
-                // Показываем финальное сообщение
-                setTimeout(() => {
-                    window.telegramApp.showAlert(
-                        '✅ Отлично! Если изображение не сохранилось:\n\n' +
-                        '• Проверьте уведомления\n' +
-                        '• Или попробуйте нажать на ссылку еще раз\n' +
-                        '• Изображение сохранится в галерею телефона'
-                    );
-                    
-                    // Убираем ссылку через некоторое время
-                    setTimeout(() => {
-                        if (document.body.contains(downloadLink)) {
-                            document.body.removeChild(downloadLink);
-                        }
-                    }, 10000);
-                }, 1000);
-            }, 1500);
-        }
+        // Создаем контейнер для ссылки и инструкции
+        const downloadContainer = document.createElement('div');
+        downloadContainer.style.cssText = `
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 90%;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+        `;
+        
+        const instruction = document.createElement('div');
+        instruction.style.cssText = `
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        `;
+        instruction.innerHTML = `
+            <strong>Инструкция по скачиванию:</strong><br>
+            1. Нажмите на зеленую кнопку ниже<br>
+            2. Удерживайте появившуюся ссылку<br>
+            3. Выберите "Скачать" или "Сохранить"<br>
+            4. Изображение сохранится в галерею
+        `;
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Закрыть';
+        closeBtn.style.cssText = `
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+        `;
+        closeBtn.onclick = () => {
+            document.body.removeChild(overlay);
+        };
+        
+        // Собираем всё вместе
+        downloadContainer.appendChild(instruction);
+        downloadContainer.appendChild(downloadLink);
+        downloadContainer.appendChild(closeBtn);
+        overlay.appendChild(downloadContainer);
+        document.body.appendChild(overlay);
+        
+        // Автоматически нажимаем на ссылку через небольшой промежуток времени
+        setTimeout(() => {
+            downloadLink.click();
+        }, 500);
+        
+        // Также добавляем обработчик ручного нажатия
+        downloadLink.onclick = (e) => {
+            e.preventDefault();
+            // Создаем временную ссылку для прямого скачивания
+            const tempLink = document.createElement('a');
+            tempLink.href = imageDataUrl;
+            tempLink.download = filename;
+            tempLink.style.display = 'none';
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+        };
+        
+        // Убираем overlay при клике на него
+        overlay.onclick = (e) => {
+            if (e.target === overlay) {
+                document.body.removeChild(overlay);
+            }
+        };
     }
     
     getProjectData() {
