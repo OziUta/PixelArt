@@ -841,6 +841,100 @@ body {
 .is-telegram .share-btn {
     display: none !important;
 }
+/* Стили для модального окна скачивания */
+.download-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.download-container {
+    background: color-mix(in srgb, var(--bg-primary) 95%, #000 5%);
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 2px solid color-mix(in srgb, var(--bg-primary) 80%, #000 20%);
+}
+
+.download-instruction {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.download-instruction strong {
+    color: var(--accent-color);
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.download-link {
+    display: block;
+    background: #27ae60;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 15px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.download-link:hover {
+    background: #219a52;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+.download-close {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.download-close:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .download-container {
+        padding: 20px 15px;
+        margin: 10px;
+    }
+    
+    .download-instruction {
+        font-size: 0.9rem;
+    }
+    
+    .download-link {
+        padding: 12px 20px;
+        font-size: 1.1rem;
+    }
+    
+    .download-close {
+        padding: 8px 16px;
+    }
+}
 
 
 
