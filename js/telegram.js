@@ -164,39 +164,7 @@ class TelegramIntegration {
         }
     }
 
-    shareProject(imageUrl) {
-        if (this.isTelegram && this.tg) {
-            try {
-                this.tg.showPopup({
-                    title: 'Поделиться рисунком',
-                    message: 'Хотите отправить свой рисунок?',
-                    buttons: [
-                        {
-                            type: 'default',
-                            text: 'Поделиться',
-                            id: 'share'
-                        },
-                        {
-                            type: 'cancel',
-                            id: 'cancel'
-                        }
-                    ]
-                }, (buttonId) => {
-                    if (buttonId === 'share') {
-                        this.tg.sendData(JSON.stringify({
-                            type: 'share_image',
-                            image: imageUrl
-                        }));
-                    }
-                });
-            } catch (error) {
-                console.error('Error sharing project:', error);
-            }
-        } else {
-            alert('Функция "Поделиться" доступна только в Telegram');
-        }
-    }
-
+    
     showAlert(message) {
         if (this.isTelegram && this.tg) {
             try {
@@ -252,3 +220,4 @@ class TelegramIntegration {
 }
 
 const telegramApp = new TelegramIntegration();
+
