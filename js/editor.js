@@ -1,5 +1,6 @@
 class PixelArtEditor {
     constructor(gridSize = 16) {
+        // Ограничиваем возможные размеры сетки
         this.gridSize = gridSize === 32 ? 16 : gridSize;
         this.currentColor = '#ff0000';
         this.currentTool = 'brush';
@@ -22,11 +23,13 @@ class PixelArtEditor {
         
         const pixelSize = this.calculatePixelSize();
         
+        // Очищаем контейнер
         container.innerHTML = '';
         container.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
         
         this.canvas = [];
         
+        // Создаем пиксели
         for (let i = 0; i < this.gridSize * this.gridSize; i++) {
             const pixel = document.createElement('div');
             pixel.className = 'pixel';
@@ -40,6 +43,7 @@ class PixelArtEditor {
     }
     
     calculatePixelSize() {
+        // Простая логика расчета размера пикселя
         const baseSize = window.innerWidth <= 480 ? 15 : 20;
         return Math.max(8, Math.min(30, Math.floor(baseSize * 16 / this.gridSize)));
     }
@@ -62,6 +66,7 @@ class PixelArtEditor {
         document.addEventListener('mouseup', () => this.stopDrawing());
         document.addEventListener('touchend', () => this.stopDrawing());
         
+        // Обработчики для инструментов
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('tool')) {
                 document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
@@ -154,6 +159,7 @@ class PixelArtEditor {
     }
     
     changeGridSize(newSize) {
+        // Ограничиваем возможные размеры
         const allowedSizes = [8, 16];
         const finalSize = allowedSizes.includes(parseInt(newSize)) ? parseInt(newSize) : 16;
         
@@ -183,112 +189,270 @@ class PixelArtEditor {
             ctx.fillRect(x, y, scale, scale);
         });
         
-        this.showDownloadModal(canvas);
+        // Всегда используем улучшенное скачивание
+        this.enhancedDownload(canvas);
     }
     
-    showDownloadModal(canvas) {
+    enhancedDownload(canvas) {
         const imageDataUrl = canvas.toDataURL('image/png');
+        const filename = `pixel-art-${this.gridSize}x${this.gridSize}-${Date.now()}.png`;
         
-        // Создаем простое модальное окно
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        `;
+        // Создаем временное окно с изображением
+        this.createDownloadWindow(imageDataUrl, filename);
+    }
+
+    createDownloadWindow(imageDataUrl, filename) {
+        // Создаем новое окно с изображением
+        const downloadWindow = window.open('', '_blank');
         
-        modal.innerHTML = `
-            <div style="
-                background: #1a1a1a;
-                padding: 25px;
-                border-radius: 15px;
-                text-align: center;
-                max-width: 90%;
-                max-height: 90%;
-                overflow: auto;
-                border: 2px solid #333;
-                color: white;
-            ">
-                <h2 style="margin-bottom: 20px; color: #fff;">🎨 Ваш пиксель-арт готов!</h2>
-                
-                <div style="
-                    background: #2d2d2d;
-                    padding: 15px;
-                    border-radius: 10px;
-                    margin: 15px 0;
-                    border-left: 4px solid #27ae60;
-                    text-align: left;
-                ">
-                    <strong>📱 Как сохранить на телефон:</strong>
-                    <div style="margin-top: 10px; line-height: 1.5;">
-                        1. <strong>Нажмите и удерживайте</strong> изображение ниже<br>
-                        2. В меню выберите <strong>"Сохранить изображение"</strong><br>
-                        3. Или <strong>"Скачать"</strong><br>
-                        4. Изображение сохранится в <strong>галерею</strong>
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Скачать пиксель-арт</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 20px;
+                        font-family: Arial, sans-serif;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        min-height: 100vh;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        text-align: center;
+                        color: white;
+                    }
+                    .container {
+                        background: rgba(255,255,255,0.95);
+                        padding: 30px;
+                        border-radius: 20px;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                        max-width: 90%;
+                        color: #333;
+                    }
+                    h1 {
+                        color: #2c3e50;
+                        margin-bottom: 20px;
+                        font-size: 1.5rem;
+                    }
+                    .image-preview {
+                        max-width: 300px;
+                        max-height: 300px;
+                        border: 3px solid #3498db;
+                        border-radius: 10px;
+                        margin: 20px 0;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    }
+                    .instruction {
+                        background: #f8f9fa;
+                        padding: 15px;
+                        border-radius: 10px;
+                        margin: 15px 0;
+                        border-left: 4px solid #27ae60;
+                        text-align: left;
+                    }
+                    .instruction ol {
+                        margin: 10px 0;
+                        padding-left: 20px;
+                    }
+                    .instruction li {
+                        margin-bottom: 8px;
+                        line-height: 1.4;
+                    }
+                    .download-btn {
+                        display: inline-block;
+                        background: #27ae60;
+                        color: white;
+                        padding: 15px 30px;
+                        border-radius: 10px;
+                        text-decoration: none;
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        margin: 15px 0;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+                        border: none;
+                        cursor: pointer;
+                    }
+                    .download-btn:hover {
+                        background: #219a52;
+                        transform: translateY(-2px);
+                        box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+                    }
+                    .close-btn {
+                        background: #e74c3c;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        margin-top: 10px;
+                        transition: all 0.3s ease;
+                    }
+                    .close-btn:hover {
+                        background: #c0392b;
+                    }
+                    @media (max-width: 480px) {
+                        .container {
+                            padding: 20px 15px;
+                        }
+                        h1 {
+                            font-size: 1.3rem;
+                        }
+                        .image-preview {
+                            max-width: 250px;
+                        }
+                        .download-btn {
+                            padding: 12px 25px;
+                            font-size: 1.1rem;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>🎨 Ваш пиксель-арт готов!</h1>
+                    
+                    <img src="${imageDataUrl}" alt="Pixel Art" class="image-preview">
+                    
+                    <div class="instruction">
+                        <strong>Как сохранить изображение:</strong>
+                        <ol>
+                            <li>Нажмите и удерживайте изображение выше</li>
+                            <li>В появившемся меню выберите "Скачать" или "Сохранить изображение"</li>
+                            <li>Изображение сохранится в галерею вашего телефона</li>
+                        </ol>
                     </div>
+                    
+                    <a href="${imageDataUrl}" download="${filename}" class="download-btn">
+                        📥 Скачать PNG
+                    </a>
+                    
+                    <br>
+                    <button class="close-btn" onclick="window.close()">Закрыть окно</button>
                 </div>
                 
-                <img src="${imageDataUrl}" alt="Ваш пиксель-арт" style="
+                <script>
+                    // Автоматически пытаемся скачать при загрузке страницы
+                    setTimeout(() => {
+                        const downloadLink = document.querySelector('.download-btn');
+                        if (downloadLink) {
+                            downloadLink.click();
+                        }
+                    }, 500);
+                    
+                    // Также добавляем возможность ручного скачивания при клике на изображение
+                    document.querySelector('.image-preview').addEventListener('click', function() {
+                        const tempLink = document.createElement('a');
+                        tempLink.href = '${imageDataUrl}';
+                        tempLink.download = '${filename}';
+                        tempLink.click();
+                    });
+                </script>
+            </body>
+            </html>
+        `;
+        
+        if (downloadWindow) {
+            downloadWindow.document.write(htmlContent);
+            downloadWindow.document.close();
+            
+            // Показываем сообщение в основном приложении
+            if (window.telegramApp) {
+                window.telegramApp.showAlert(
+                    '📸 Открылось окно для скачивания!\n\n' +
+                    'Если окно не открылось автоматически:\n' +
+                    '1. Проверьте блокировку всплывающих окон\n' +
+                    '2. Нажмите на изображение в основном окне\n' +
+                    '3. Выберите "Скачать" из меню'
+                );
+            }
+        } else {
+            // Если новое окно заблокировано, показываем изображение в основном окне
+            this.showImageInMainWindow(imageDataUrl, filename);
+        }
+    }
+
+    showImageInMainWindow(imageDataUrl, filename) {
+        // Создаем overlay в основном окне
+        const overlay = document.createElement('div');
+        overlay.className = 'download-overlay';
+        overlay.innerHTML = `
+            <div class="download-container">
+                <h2 style="color: var(--text-primary); margin-bottom: 20px;">📸 Ваш пиксель-арт</h2>
+                
+                <img src="${imageDataUrl}" alt="Pixel Art" style="
                     max-width: 300px;
                     max-height: 300px;
                     border: 3px solid #3498db;
                     border-radius: 10px;
                     margin: 15px 0;
-                    display: block;
-                    margin-left: auto;
-                    margin-right: auto;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
                 ">
                 
-                <div style="margin-top: 20px;">
-                    <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="
-                        background: #27ae60;
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 8px;
-                        font-size: 1rem;
-                        cursor: pointer;
-                        margin: 5px;
-                    ">Понятно</button>
-                    
-                    <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="
-                        background: #e74c3c;
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 8px;
-                        font-size: 1rem;
-                        cursor: pointer;
-                        margin: 5px;
-                    ">Закрыть</button>
+                <div style="
+                    background: rgba(255,255,255,0.1);
+                    padding: 15px;
+                    border-radius: 10px;
+                    margin: 15px 0;
+                    border-left: 4px solid #27ae60;
+                    text-align: left;
+                    color: var(--text-primary);
+                ">
+                    <strong>Инструкция по сохранению:</strong><br>
+                    1. Нажмите и удерживайте изображение<br>
+                    2. Выберите "Скачать" или "Сохранить"<br>
+                    3. Изображение сохранится в галерею
                 </div>
+                
+                <a href="${imageDataUrl}" download="${filename}" style="
+                    display: inline-block;
+                    background: #27ae60;
+                    color: white;
+                    padding: 12px 25px;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-weight: bold;
+                    margin: 10px 0;
+                ">📥 Попробовать скачать</a>
+                
+                <br>
+                <button onclick="this.closest('.download-overlay').remove()" style="
+                    background: #e74c3c;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    margin-top: 10px;
+                    cursor: pointer;
+                ">Закрыть</button>
             </div>
         `;
         
-        document.body.appendChild(modal);
+        // Добавляем обработчик клика на изображение
+        const img = overlay.querySelector('img');
+        img.style.cursor = 'pointer';
+        img.title = 'Нажмите и удерживайте для сохранения';
         
-        // Закрытие по клику на фон
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                document.body.removeChild(modal);
+        document.body.appendChild(overlay);
+        
+        // Автоматически пытаемся скачать
+        setTimeout(() => {
+            const downloadLink = overlay.querySelector('a');
+            if (downloadLink) {
+                downloadLink.click();
+            }
+        }, 1000);
+        
+        // Закрытие по клику на overlay
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                document.body.removeChild(overlay);
             }
         });
-        
-        // Показываем сообщение в Telegram
-        if (window.telegramApp) {
-            window.telegramApp.showAlert(
-                '📸 Изображение готово!\n\n' +
-                'Нажмите и удерживайте картинку в открывшемся окне, чтобы сохранить её в галерею.'
-            );
-        }
     }
     
     getProjectData() {
