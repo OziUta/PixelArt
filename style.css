@@ -936,6 +936,41 @@ body {
     }
 }
 
+/* Стили для модального окна скачивания */
+.download-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.download-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 90%;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    border: 2px solid #404040;
+    color: white;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .download-container {
+        padding: 20px 15px;
+        margin: 10px;
+    }
+}
+
+
 
 
 
